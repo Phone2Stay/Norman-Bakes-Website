@@ -14,15 +14,12 @@ export const orders = pgTable("orders", {
   customerEmail: text("customer_email").notNull(),
   customerPhone: text("customer_phone").notNull(),
   collectionDate: text("collection_date").notNull(),
-  cakeType: text("cake_type").notNull(),
-  cakeSize: text("cake_size").notNull(),
-  cakeFlavour: text("cake_flavour"),
-  cakeTheme: text("cake_theme"),
+  productType: text("product_type").notNull(),
+  productDetails: text("product_details").notNull(),
   specialRequirements: text("special_requirements"),
-  estimatedPrice: decimal("estimated_price", { precision: 10, scale: 2 }).notNull(),
-  depositAmount: decimal("deposit_amount", { precision: 10, scale: 2 }).notNull(),
-  depositPaid: integer("deposit_paid").default(0), // 0 = not paid, 1 = paid
+  depositAmount: integer("deposit_amount").notNull().default(10),
   stripePaymentIntentId: text("stripe_payment_intent_id"),
+  paymentStatus: text("payment_status").default("pending"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -41,22 +38,11 @@ export const insertUserSchema = createInsertSchema(users).pick({
   password: true,
 });
 
-export const insertOrderSchema = createInsertSchema(orders).pick({
-  customerName: true,
-  customerEmail: true,
-  customerPhone: true,
-  collectionDate: true,
-  cakeType: true,
-  cakeSize: true,
-  cakeFlavour: true,
-  cakeTheme: true,
-  specialRequirements: true,
-  estimatedPrice: true,
-  depositAmount: true,
-}).extend({
-  filling: z.string().optional(),
-  cupcakeType: z.string().optional(),
-  quantity: z.number().optional(),
+export const insertOrderSchema = createInsertSchema(orders).omit({
+  id: true,
+  stripePaymentIntentId: true,
+  paymentStatus: true,
+  createdAt: true,
 });
 
 export const insertSeasonalDealSchema = createInsertSchema(seasonalDeals).pick({

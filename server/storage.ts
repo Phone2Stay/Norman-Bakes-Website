@@ -67,7 +67,7 @@ export class MemStorage implements IStorage {
   async updateOrderPaymentStatus(id: number, stripePaymentIntentId: string): Promise<Order | undefined> {
     const order = this.orders.get(id);
     if (order) {
-      const updatedOrder = { ...order, depositPaid: 1, stripePaymentIntentId };
+      const updatedOrder = { ...order, paymentStatus: "paid", stripePaymentIntentId };
       this.orders.set(id, updatedOrder);
       return updatedOrder;
     }
