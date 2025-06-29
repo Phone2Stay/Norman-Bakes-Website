@@ -96,7 +96,11 @@ Required environment variables:
 - **Monitoring**: Request logging and error tracking capabilities
 
 ## Changelog
-- June 29, 2025. Initial setup
+- June 29, 2025: Initial setup and complete website build
+- June 29, 2025: Integrated actual Norman Bakes logo
+- June 29, 2025: Updated order form to single button flow
+- June 29, 2025: Enhanced gallery with 12 professional cake images
+- June 29, 2025: Streamlined order submission and payment process
 
 ## User Preferences
 
