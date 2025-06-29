@@ -3,52 +3,72 @@ import Lightbox from "@/components/ui/lightbox";
 
 const galleryImages = [
   {
-    src: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
-    alt: "Elegant three-tier wedding cake with gold accents and floral decorations"
+    src: "/attached_assets/image0_1751219767290.jpeg",
+    alt: "Norman Bakes signature cake creation"
   },
   {
-    src: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
-    alt: "Colourful children's birthday cake with vibrant rainbow layers"
+    src: "/attached_assets/image1_1751219771969.jpeg",
+    alt: "Beautiful celebration cake by Norman Bakes"
   },
   {
-    src: "https://images.unsplash.com/photo-1558636508-e0db3814bd1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
-    alt: "Sophisticated anniversary cake with gold detailing and fresh flowers"
+    src: "/attached_assets/image2_1751219775299.jpeg",
+    alt: "Custom designed cake with intricate details"
   },
   {
-    src: "https://images.unsplash.com/photo-1551024506-0bccd828d307?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
-    alt: "Gourmet cupcake selection with various flavours and artistic decorations"
+    src: "/attached_assets/image3_1751219779374.jpeg",
+    alt: "Elegant wedding cake design"
   },
   {
-    src: "https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
-    alt: "Custom themed celebration cake with intricate fondant work"
+    src: "/attached_assets/image5_1751219782485.jpeg",
+    alt: "Specialty themed cake creation"
   },
   {
-    src: "https://images.unsplash.com/photo-1621303837174-89787a7d4729?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
-    alt: "Seasonal fruit cake with fresh berries and elegant presentation"
+    src: "/attached_assets/image6_1751219784941.jpeg",
+    alt: "Delicious birthday cake design"
   },
   {
-    src: "https://images.unsplash.com/photo-1486427944299-d1955d23e34d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
-    alt: "Luxury dessert table featuring various celebration cakes"
+    src: "/attached_assets/image7_1751219787363.jpeg",
+    alt: "Professional cake artistry"
   },
   {
-    src: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
-    alt: "Artisan chocolate cake with gold leaf and berry garnish"
+    src: "/attached_assets/image8_1751219790100.jpeg",
+    alt: "Custom celebration cake"
   },
   {
-    src: "https://images.unsplash.com/photo-1603532648955-039310d9ed75?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
-    alt: "Rustic naked cake with fresh flowers and natural decorations"
+    src: "/attached_assets/image9_1751219794918.jpeg",
+    alt: "Beautiful cake with detailed decorations"
   },
   {
-    src: "https://images.unsplash.com/photo-1607478900766-efe13248b125?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
-    alt: "Modern geometric wedding cake with black and gold design"
+    src: "/attached_assets/image10_1751219802338.jpeg",
+    alt: "Anniversary cake with gold accents"
   },
   {
-    src: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
-    alt: "Vintage-style buttercream cake with delicate piped flowers"
+    src: "/attached_assets/image11_1751219807500.jpeg",
+    alt: "Specialty design cake"
   },
   {
-    src: "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
-    alt: "Celebration cake with personalised message and themed decorations"
+    src: "/attached_assets/image12_1751219810295.jpeg",
+    alt: "Norman Bakes premium cake design"
+  },
+  {
+    src: "/attached_assets/image13_1751219817048.jpeg",
+    alt: "Custom themed celebration cake"
+  },
+  {
+    src: "/attached_assets/image14_1751219819158.jpeg",
+    alt: "Elegant cake with floral details"
+  },
+  {
+    src: "/attached_assets/image15_1751219840738.jpeg",
+    alt: "Professional wedding cake design"
+  },
+  {
+    src: "/attached_assets/image16_1751219825053.jpeg",
+    alt: "Birthday cake with custom decorations"
+  },
+  {
+    src: "/attached_assets/image19_1751219837235.jpeg",
+    alt: "Luxury cake design by Norman Bakes"
   }
 ];
 

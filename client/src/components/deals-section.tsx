@@ -5,50 +5,62 @@ import { Button } from "@/components/ui/button";
 const deals = [
   {
     title: "Wedding Package",
-    description: "Complete wedding cake service including consultation, custom design, and delivery.",
-    price: "From £350",
-    subtitle: "3-tier cake serving 60+ guests",
+    description: "Complete wedding cake service with consultation, bespoke design, and delivery to your venue.",
+    price: "From £280",
+    subtitle: "Starting with 2-tier design",
     features: [
-      "Free consultation",
-      "Custom design",
-      "Professional delivery", 
-      "Cake knife included"
+      "Free design consultation",
+      "Cake tasting session",
+      "Professional venue delivery",
+      "Cake knife & server included"
     ]
   },
   {
-    title: "Birthday Special",
-    description: "Custom birthday cakes with personalised decorations and your choice of flavours.",
-    price: "From £85",
-    subtitle: "Serves 12-15 people",
+    title: "Celebration Special",
+    description: "Perfect for birthdays, anniversaries, and special occasions with personalised touches.",
+    price: "From £65",
+    subtitle: "6-8 inch cakes available",
     features: [
-      "Custom message",
-      "Choice of flavours",
-      "Themed decorations",
-      "Collection box"
+      "Personalised message",
+      "Choice of sponge flavours",
+      "Custom colour scheme",
+      "Elegant gift box"
     ]
   },
   {
-    title: "Cupcake Dozen",
-    description: "Assorted gourmet cupcakes perfect for office treats or small gatherings.",
-    price: "£42",
-    subtitle: "12 assorted cupcakes",
+    title: "Cupcake Collections",
+    description: "Beautifully decorated cupcakes perfect for parties, offices, or gift giving.",
+    price: "From £35",
+    subtitle: "Dozen mixed selection",
     features: [
-      "6 different flavours",
-      "Elegant presentation box",
-      "Same-day collection",
-      "Corporate discounts available"
+      "Variety of flavours",
+      "Decorative toppers",
+      "Presentation boxes",
+      "Bulk order discounts"
     ]
   },
   {
-    title: "Anniversary Elegance",
-    description: "Romantic anniversary cakes with sophisticated designs and premium ingredients.",
-    price: "From £125",
-    subtitle: "Serves 20-25 people",
+    title: "Christening Cakes",
+    description: "Delicate designs for baptisms and christenings with traditional or modern styling.",
+    price: "From £70",
+    subtitle: "Serves 15-20 people",
     features: [
-      "Elegant design",
-      "Premium ingredients",
-      "Gold accents",
-      "Champagne flavour option"
+      "Religious or secular designs",
+      "Soft pastel colours",
+      "Personalised details",
+      "Photography-ready finish"
+    ]
+  },
+  {
+    title: "Themed Creations",
+    description: "Custom character and hobby-themed cakes bringing your vision to life.",
+    price: "From £90",
+    subtitle: "Detailed sculpted designs",
+    features: [
+      "3D character work",
+      "Edible image options",
+      "Hand-modelled details",
+      "Any theme possible"
     ]
   }
 ];

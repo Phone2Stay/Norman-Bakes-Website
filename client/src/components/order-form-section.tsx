@@ -31,29 +31,37 @@ const orderSchema = z.object({
 type OrderFormData = z.infer<typeof orderSchema>;
 
 const cakeTypes = [
-  { value: "wedding", label: "Wedding Cake (from £350)", basePrice: 350 },
-  { value: "birthday", label: "Birthday Cake (from £85)", basePrice: 85 },
-  { value: "anniversary", label: "Anniversary Cake (from £125)", basePrice: 125 },
-  { value: "celebration", label: "Celebration Cake (from £95)", basePrice: 95 },
-  { value: "cupcakes", label: "Cupcakes - Dozen (£42)", basePrice: 42 },
-  { value: "custom", label: "Custom Design (from £120)", basePrice: 120 },
+  { value: "wedding", label: "Wedding Cake (from £280)", basePrice: 280 },
+  { value: "birthday", label: "Birthday Cake (from £65)", basePrice: 65 },
+  { value: "anniversary", label: "Anniversary Cake (from £85)", basePrice: 85 },
+  { value: "celebration", label: "Celebration Cake (from £75)", basePrice: 75 },
+  { value: "christening", label: "Christening Cake (from £70)", basePrice: 70 },
+  { value: "themed", label: "Themed Cake (from £90)", basePrice: 90 },
+  { value: "cupcakes", label: "Cupcakes - Dozen (£35)", basePrice: 35 },
+  { value: "cupcake-boxes", label: "Cupcake Gift Boxes (from £25)", basePrice: 25 },
+  { value: "custom", label: "Bespoke Design (from £150)", basePrice: 150 },
 ];
 
 const cakeSizes = [
-  { value: "small", label: "Small (12-15 people)", multiplier: 1 },
-  { value: "medium", label: "Medium (20-25 people)", multiplier: 1.3 },
-  { value: "large", label: "Large (35-40 people)", multiplier: 1.6 },
-  { value: "extra-large", label: "Extra Large (50+ people)", multiplier: 2 },
+  { value: "6-inch", label: "6 inch (serves 8-12)", multiplier: 1 },
+  { value: "8-inch", label: "8 inch (serves 15-20)", multiplier: 1.4 },
+  { value: "10-inch", label: "10 inch (serves 25-30)", multiplier: 1.8 },
+  { value: "12-inch", label: "12 inch (serves 35-40)", multiplier: 2.2 },
+  { value: "2-tier", label: "2 Tier (serves 40-50)", multiplier: 2.8 },
+  { value: "3-tier", label: "3 Tier (serves 60-80)", multiplier: 3.5 },
 ];
 
 const flavours = [
-  { value: "vanilla", label: "Classic Vanilla", surcharge: 0 },
-  { value: "chocolate", label: "Rich Chocolate", surcharge: 0 },
-  { value: "lemon", label: "Zesty Lemon", surcharge: 0 },
-  { value: "red-velvet", label: "Red Velvet", surcharge: 0 },
-  { value: "carrot", label: "Carrot Cake", surcharge: 0 },
-  { value: "champagne", label: "Champagne (Premium +£25)", surcharge: 25 },
-  { value: "custom", label: "Custom Flavour", surcharge: 0 },
+  { value: "vanilla", label: "Classic Vanilla Sponge", surcharge: 0 },
+  { value: "chocolate", label: "Rich Chocolate Sponge", surcharge: 0 },
+  { value: "lemon", label: "Lemon Drizzle", surcharge: 0 },
+  { value: "victoria", label: "Victoria Sponge", surcharge: 0 },
+  { value: "red-velvet", label: "Red Velvet", surcharge: 5 },
+  { value: "carrot", label: "Carrot & Walnut", surcharge: 5 },
+  { value: "coffee", label: "Coffee & Walnut", surcharge: 5 },
+  { value: "fruit", label: "Traditional Fruit Cake", surcharge: 8 },
+  { value: "champagne", label: "Champagne Sponge (+£15)", surcharge: 15 },
+  { value: "custom", label: "Bespoke Flavour", surcharge: 10 },
 ];
 
 function PaymentForm({ orderId, amount, onSuccess }: { orderId: number, amount: number, onSuccess: () => void }) {
