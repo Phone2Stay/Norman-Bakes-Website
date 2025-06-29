@@ -109,6 +109,7 @@ Required environment variables:
   - Cupcakes: Standard (£2), Personalised (£2.50), Decorated (£3)
   - Other items: Tray bakes (£30), Bento cakes (£40), Brownies (£22)
 - June 29, 2025: Added filling options display and cupcake pricing guidance
+- June 29, 2025: Simplified order form to use product type dropdown with text input for details, fixed £10 deposit requirement
 
 ## User Preferences
 

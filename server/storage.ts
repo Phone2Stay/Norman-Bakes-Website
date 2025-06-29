@@ -50,10 +50,17 @@ export class MemStorage implements IStorage {
   async createOrder(insertOrder: InsertOrder): Promise<Order> {
     const id = this.currentOrderId++;
     const order: Order = { 
-      ...insertOrder, 
       id,
-      depositPaid: 0,
+      customerName: insertOrder.customerName,
+      customerEmail: insertOrder.customerEmail,
+      customerPhone: insertOrder.customerPhone,
+      collectionDate: insertOrder.collectionDate,
+      productType: insertOrder.productType,
+      productDetails: insertOrder.productDetails,
+      specialRequirements: insertOrder.specialRequirements || null,
+      depositAmount: insertOrder.depositAmount ?? 10,
       stripePaymentIntentId: null,
+      paymentStatus: "pending",
       createdAt: new Date()
     };
     this.orders.set(id, order);
@@ -83,6 +90,9 @@ export class MemStorage implements IStorage {
     const deal: SeasonalDeal = { 
       ...insertDeal, 
       id,
+      discount: insertDeal.discount || null,
+      validUntil: insertDeal.validUntil || null,
+      isActive: insertDeal.isActive || 1,
       createdAt: new Date()
     };
     this.seasonalDeals.set(id, deal);
