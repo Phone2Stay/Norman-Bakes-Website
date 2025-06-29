@@ -99,7 +99,7 @@ Required environment variables:
 - June 29, 2025: Initial setup and complete website build
 - June 29, 2025: Integrated actual Norman Bakes logo
 - June 29, 2025: Updated order form to single button flow
-- June 29, 2025: Enhanced gallery with 17 professional cake images from Norman Bakes
+- June 29, 2025: Updated gallery with 7 high-quality Norman Bakes showcase images featuring themed cakes, cupcake collections, and specialty designs
 - June 29, 2025: Streamlined order submission and payment process
 - June 29, 2025: Updated pricing structure with exact Norman Bakes pricing from provided image:
   - Round cakes: 4" (£50), 6" (£70), 8" (£90)

@@ -3,72 +3,32 @@ import Lightbox from "@/components/ui/lightbox";
 
 const galleryImages = [
   {
-    src: "/attached_assets/image0_1751219767290.jpeg",
-    alt: "Norman Bakes signature cake creation"
+    src: "/attached_assets/image_1751230988004.png",
+    alt: "Stunning Wicked-themed birthday cake with green and pink split design featuring Elphaba and Glinda"
   },
   {
-    src: "/attached_assets/image1_1751219771969.jpeg",
-    alt: "Beautiful celebration cake by Norman Bakes"
+    src: "/attached_assets/image_1751231039598.png",
+    alt: "Collection of themed cupcakes including elegant black and gold designs, honey-themed boxes, and football cupcakes"
   },
   {
-    src: "/attached_assets/image2_1751219775299.jpeg",
-    alt: "Custom designed cake with intricate details"
+    src: "/attached_assets/image_1751231066978.png",
+    alt: "Tropical Stitch-themed birthday cake with Hawaiian flowers and surfboard decorations"
   },
   {
-    src: "/attached_assets/image3_1751219779374.jpeg",
-    alt: "Elegant wedding cake design"
+    src: "/attached_assets/image_1751231108004.png",
+    alt: "Elegant 50th birthday cake decorated with delicate buttercream flowers and purple ribbon"
   },
   {
-    src: "/attached_assets/image5_1751219782485.jpeg",
-    alt: "Specialty themed cake creation"
+    src: "/attached_assets/image_1751231154422.png",
+    alt: "Sophisticated black and gold Portia birthday cake with matching cupcakes in presentation box"
   },
   {
-    src: "/attached_assets/image6_1751219784941.jpeg",
-    alt: "Delicious birthday cake design"
+    src: "/attached_assets/image_1751231200383.png",
+    alt: "Collection of celebration cakes including heart-shaped designs, anniversary cakes, and themed creations"
   },
   {
-    src: "/attached_assets/image7_1751219787363.jpeg",
-    alt: "Professional cake artistry"
-  },
-  {
-    src: "/attached_assets/image8_1751219790100.jpeg",
-    alt: "Custom celebration cake"
-  },
-  {
-    src: "/attached_assets/image9_1751219794918.jpeg",
-    alt: "Beautiful cake with detailed decorations"
-  },
-  {
-    src: "/attached_assets/image10_1751219802338.jpeg",
-    alt: "Anniversary cake with gold accents"
-  },
-  {
-    src: "/attached_assets/image11_1751219807500.jpeg",
-    alt: "Specialty design cake"
-  },
-  {
-    src: "/attached_assets/image12_1751219810295.jpeg",
-    alt: "Norman Bakes premium cake design"
-  },
-  {
-    src: "/attached_assets/image13_1751219817048.jpeg",
-    alt: "Custom themed celebration cake"
-  },
-  {
-    src: "/attached_assets/image14_1751219819158.jpeg",
-    alt: "Elegant cake with floral details"
-  },
-  {
-    src: "/attached_assets/image15_1751219840738.jpeg",
-    alt: "Professional wedding cake design"
-  },
-  {
-    src: "/attached_assets/image16_1751219825053.jpeg",
-    alt: "Birthday cake with custom decorations"
-  },
-  {
-    src: "/attached_assets/image19_1751219837235.jpeg",
-    alt: "Luxury cake design by Norman Bakes"
+    src: "/attached_assets/image_1751231264565.png",
+    alt: "Beautiful selection of pink rose-themed cupcakes with intricate buttercream decorations"
   }
 ];
 
