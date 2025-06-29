@@ -8,6 +8,7 @@ import ContactSection from "@/components/contact-section";
 import { Card, CardContent } from "@/components/ui/card";
 import { Gift, Instagram, Facebook, Mail } from "lucide-react";
 import type { SeasonalDeal } from "@shared/schema";
+import normanBakesLogo from "@assets/image_1751232026666.png";
 
 function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -24,9 +25,9 @@ function Navigation() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <img 
-              src="/attached_assets/image34_1751219725331.jpeg" 
+              src={normanBakesLogo} 
               alt="Norman Bakes Logo" 
-              className="h-12 w-auto mr-3"
+              className="h-10 w-auto mr-3"
             />
             <span className="text-gold font-serif text-xl font-bold">Norman Bakes</span>
           </div>

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import normanBakesLogo from "@assets/image_1751232026666.png";
 
 export default function HeroSection() {
   const scrollToSection = (sectionId: string) => {
@@ -16,10 +17,13 @@ export default function HeroSection() {
         />
       </div>
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 className="font-serif text-5xl md:text-7xl font-bold mb-6">
-          <span className="text-gold">Norman Bakes</span>
-        </h1>
-        <p className="text-2xl md:text-3xl font-serif text-gold mb-8">Cakes to Die For</p>
+        <div className="mb-8">
+          <img 
+            src={normanBakesLogo} 
+            alt="Norman Bakes - Cakes to Die For" 
+            className="mx-auto h-48 md:h-64 w-auto"
+          />
+        </div>
         <p className="text-lg md:text-xl mb-12 max-w-2xl mx-auto">
           Bespoke celebration cakes crafted with love in Barry, Vale of Glamorgan. 
           From elegant wedding cakes to delightful birthday treats, every creation is a masterpiece.

@@ -1,33 +1,41 @@
 import { useState } from "react";
 import Lightbox from "@/components/ui/lightbox";
 
+import wickedCakeImage from "@assets/image_1751230988004.png";
+import cupcakeCollectionImage from "@assets/image_1751231039598.png";
+import stitchCakeImage from "@assets/image_1751231066978.png";
+import birthdayCakeImage from "@assets/image_1751231108004.png";
+import portiaCakeImage from "@assets/image_1751231154422.png";
+import heartCakesImage from "@assets/image_1751231200383.png";
+import roseCupcakesImage from "@assets/image_1751231264565.png";
+
 const galleryImages = [
   {
-    src: "/attached_assets/image_1751230988004.png",
+    src: wickedCakeImage,
     alt: "Stunning Wicked-themed birthday cake with green and pink split design featuring Elphaba and Glinda"
   },
   {
-    src: "/attached_assets/image_1751231039598.png",
+    src: cupcakeCollectionImage,
     alt: "Collection of themed cupcakes including elegant black and gold designs, honey-themed boxes, and football cupcakes"
   },
   {
-    src: "/attached_assets/image_1751231066978.png",
+    src: stitchCakeImage,
     alt: "Tropical Stitch-themed birthday cake with Hawaiian flowers and surfboard decorations"
   },
   {
-    src: "/attached_assets/image_1751231108004.png",
+    src: birthdayCakeImage,
     alt: "Elegant 50th birthday cake decorated with delicate buttercream flowers and purple ribbon"
   },
   {
-    src: "/attached_assets/image_1751231154422.png",
+    src: portiaCakeImage,
     alt: "Sophisticated black and gold Portia birthday cake with matching cupcakes in presentation box"
   },
   {
-    src: "/attached_assets/image_1751231200383.png",
+    src: heartCakesImage,
     alt: "Collection of celebration cakes including heart-shaped designs, anniversary cakes, and themed creations"
   },
   {
-    src: "/attached_assets/image_1751231264565.png",
+    src: roseCupcakesImage,
     alt: "Beautiful selection of pink rose-themed cupcakes with intricate buttercream decorations"
   }
 ];
