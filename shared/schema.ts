@@ -53,6 +53,10 @@ export const insertOrderSchema = createInsertSchema(orders).pick({
   specialRequirements: true,
   estimatedPrice: true,
   depositAmount: true,
+}).extend({
+  filling: z.string().optional(),
+  cupcakeType: z.string().optional(),
+  quantity: z.number().optional(),
 });
 
 export const insertSeasonalDealSchema = createInsertSchema(seasonalDeals).pick({

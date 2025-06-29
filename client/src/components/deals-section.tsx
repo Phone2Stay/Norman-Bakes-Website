@@ -4,63 +4,63 @@ import { Button } from "@/components/ui/button";
 
 const deals = [
   {
-    title: "Wedding Package",
-    description: "Complete wedding cake service with consultation, bespoke design, and delivery to your venue.",
-    price: "From £280",
-    subtitle: "Starting with 2-tier design",
+    title: "Round Cakes",
+    description: "Classic round celebration cakes perfect for birthdays, anniversaries, and special occasions.",
+    price: "From £50",
+    subtitle: "4\", 6\", or 8\" available",
     features: [
-      "Free design consultation",
-      "Cake tasting session",
-      "Professional venue delivery",
-      "Cake knife & server included"
+      "Choice of 5 sponge flavours",
+      "7 filling options available",
+      "Custom decorations",
+      "Personalised message"
     ]
   },
   {
-    title: "Celebration Special",
-    description: "Perfect for birthdays, anniversaries, and special occasions with personalised touches.",
-    price: "From £65",
-    subtitle: "6-8 inch cakes available",
-    features: [
-      "Personalised message",
-      "Choice of sponge flavours",
-      "Custom colour scheme",
-      "Elegant gift box"
-    ]
-  },
-  {
-    title: "Cupcake Collections",
-    description: "Beautifully decorated cupcakes perfect for parties, offices, or gift giving.",
-    price: "From £35",
-    subtitle: "Dozen mixed selection",
-    features: [
-      "Variety of flavours",
-      "Decorative toppers",
-      "Presentation boxes",
-      "Bulk order discounts"
-    ]
-  },
-  {
-    title: "Christening Cakes",
-    description: "Delicate designs for baptisms and christenings with traditional or modern styling.",
+    title: "Heart Shape Cakes",
+    description: "Romantic heart-shaped cakes perfect for Valentine's Day, anniversaries, or expressing love.",
     price: "From £70",
-    subtitle: "Serves 15-20 people",
+    subtitle: "2 or 3 layer options",
     features: [
-      "Religious or secular designs",
-      "Soft pastel colours",
-      "Personalised details",
-      "Photography-ready finish"
+      "Small (2 layers) - £70",
+      "Large (3 layers) - £90", 
+      "Beautiful romantic designs",
+      "Perfect for special occasions"
     ]
   },
   {
-    title: "Themed Creations",
-    description: "Custom character and hobby-themed cakes bringing your vision to life.",
-    price: "From £90",
-    subtitle: "Detailed sculpted designs",
+    title: "Cupcake Selection",
+    description: "Individual cupcakes available in boxes of 6 or bulk orders for parties and events.",
+    price: "From £2 each",
+    subtitle: "Multiple decoration styles",
     features: [
-      "3D character work",
-      "Edible image options",
-      "Hand-modelled details",
-      "Any theme possible"
+      "Standard (buttercream + sprinkles) - £2",
+      "Personalised - £2.50 each",
+      "Highly decorated - £3 each",
+      "Available in boxes of 6"
+    ]
+  },
+  {
+    title: "Number & Letter Cakes",
+    description: "Custom shaped cakes for birthdays, anniversaries, and celebrations with personalised toppings.",
+    price: "From £70",
+    subtitle: "Custom name/age designs",
+    features: [
+      "1 letter/digit - £70",
+      "2 letters/digits - £110",
+      "Personalised name toppings",
+      "Any flavour combination"
+    ]
+  },
+  {
+    title: "Specialty Items",
+    description: "Cheesecakes, tray bakes, bento cakes, and brownies for every occasion and taste.",
+    price: "From £22",
+    subtitle: "Various options available",
+    features: [
+      "Cheesecakes (single £30, two-tier £50)",
+      "Tray bakes - £30",
+      "Bento cakes - £40",
+      "Brownies/Blondies box - £22"
     ]
   }
 ];

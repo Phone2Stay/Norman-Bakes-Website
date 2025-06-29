@@ -31,37 +31,52 @@ const orderSchema = z.object({
 type OrderFormData = z.infer<typeof orderSchema>;
 
 const cakeTypes = [
-  { value: "wedding", label: "Wedding Cake (from £280)", basePrice: 280 },
-  { value: "birthday", label: "Birthday Cake (from £65)", basePrice: 65 },
-  { value: "anniversary", label: "Anniversary Cake (from £85)", basePrice: 85 },
-  { value: "celebration", label: "Celebration Cake (from £75)", basePrice: 75 },
-  { value: "christening", label: "Christening Cake (from £70)", basePrice: 70 },
-  { value: "themed", label: "Themed Cake (from £90)", basePrice: 90 },
-  { value: "cupcakes", label: "Cupcakes - Dozen (£35)", basePrice: 35 },
-  { value: "cupcake-boxes", label: "Cupcake Gift Boxes (from £25)", basePrice: 25 },
-  { value: "custom", label: "Bespoke Design (from £150)", basePrice: 150 },
+  { value: "round-cake", label: "Round Cake", basePrice: 50 },
+  { value: "heart-cake", label: "Heart Shape Cake", basePrice: 70 },
+  { value: "cheesecake", label: "Cheesecake", basePrice: 30 },
+  { value: "cupcakes", label: "Cupcakes", basePrice: 2 },
+  { value: "tray-bake", label: "Tray Bake", basePrice: 30 },
+  { value: "number-letter", label: "Number/Letter Cake", basePrice: 70 },
+  { value: "bento-cake", label: "Bento Cake", basePrice: 40 },
+  { value: "bento-boxes", label: "Bento Boxes", basePrice: 35 },
+  { value: "brownies", label: "Brownies/Blondies", basePrice: 22 },
+  { value: "wedding", label: "Wedding Cake (on request)", basePrice: 0 },
 ];
 
 const cakeSizes = [
-  { value: "6-inch", label: "6 inch (serves 8-12)", multiplier: 1 },
-  { value: "8-inch", label: "8 inch (serves 15-20)", multiplier: 1.4 },
-  { value: "10-inch", label: "10 inch (serves 25-30)", multiplier: 1.8 },
-  { value: "12-inch", label: "12 inch (serves 35-40)", multiplier: 2.2 },
-  { value: "2-tier", label: "2 Tier (serves 40-50)", multiplier: 2.8 },
-  { value: "3-tier", label: "3 Tier (serves 60-80)", multiplier: 3.5 },
+  { value: "4-inch", label: "4\" (from £50)", multiplier: 1 },
+  { value: "6-inch", label: "6\" (from £70)", multiplier: 1.4 },
+  { value: "8-inch", label: "8\" (from £90)", multiplier: 1.8 },
+  { value: "small-heart", label: "Small Heart - 2 layers (£70)", multiplier: 1.4 },
+  { value: "large-heart", label: "Large Heart - 3 layers (£90)", multiplier: 1.8 },
+  { value: "single-tier", label: "Single Tier Cheesecake (£30)", multiplier: 0.6 },
+  { value: "two-tier", label: "Two Tier Cheesecake (£50)", multiplier: 1 },
+  { value: "1-letter", label: "1 Letter/Digit (£70)", multiplier: 1.4 },
+  { value: "2-letters", label: "2 Letters/Digits (£110)", multiplier: 2.2 },
 ];
 
 const flavours = [
-  { value: "vanilla", label: "Classic Vanilla Sponge", surcharge: 0 },
-  { value: "chocolate", label: "Rich Chocolate Sponge", surcharge: 0 },
-  { value: "lemon", label: "Lemon Drizzle", surcharge: 0 },
-  { value: "victoria", label: "Victoria Sponge", surcharge: 0 },
-  { value: "red-velvet", label: "Red Velvet", surcharge: 5 },
-  { value: "carrot", label: "Carrot & Walnut", surcharge: 5 },
-  { value: "coffee", label: "Coffee & Walnut", surcharge: 5 },
-  { value: "fruit", label: "Traditional Fruit Cake", surcharge: 8 },
-  { value: "champagne", label: "Champagne Sponge (+£15)", surcharge: 15 },
-  { value: "custom", label: "Bespoke Flavour", surcharge: 10 },
+  { value: "vanilla", label: "Vanilla", surcharge: 0 },
+  { value: "chocolate", label: "Chocolate", surcharge: 0 },
+  { value: "red-velvet", label: "Red Velvet", surcharge: 0 },
+  { value: "lemon", label: "Lemon", surcharge: 0 },
+  { value: "carrot", label: "Carrot", surcharge: 0 },
+];
+
+const fillings = [
+  { value: "no-filling", label: "No Filling", surcharge: 0 },
+  { value: "strawberry-jam", label: "Strawberry Jam", surcharge: 0 },
+  { value: "raspberry-jam", label: "Raspberry Jam", surcharge: 0 },
+  { value: "vanilla-buttercream", label: "Vanilla Buttercream", surcharge: 0 },
+  { value: "chocolate-buttercream", label: "Chocolate Buttercream", surcharge: 0 },
+  { value: "lemon-curd", label: "Lemon Curd", surcharge: 0 },
+  { value: "nutella", label: "Nutella", surcharge: 0 },
+];
+
+const cupcakeTypes = [
+  { value: "standard", label: "Standard (buttercream + sprinkles) - £2 each", price: 2 },
+  { value: "personalised", label: "Personalised (buttercream + sprinkles) - £2.50 each", price: 2.5 },
+  { value: "decorated", label: "Highly Decorated (buttercream + sprinkles) - £3 each", price: 3 },
 ];
 
 function PaymentForm({ orderId, amount, onSuccess }: { orderId: number, amount: number, onSuccess: () => void }) {
@@ -152,30 +167,79 @@ export default function OrderFormSection() {
     },
   });
 
-  const watchedValues = form.watch(['cakeType', 'cakeSize', 'cakeFlavour']);
+  const watchedValues = form.watch(['cakeType', 'cakeSize', 'cakeFlavour', 'cupcakeType', 'quantity']);
 
   useEffect(() => {
     const calculatePrice = () => {
-      const [cakeType, cakeSize, cakeFlavour] = watchedValues;
+      const [cakeType, cakeSize, cakeFlavour, cupcakeType, quantity] = watchedValues;
       
-      if (!cakeType || !cakeSize) {
+      if (!cakeType) {
         setEstimatedPrice(0);
         setDepositAmount(0);
         return;
       }
 
+      // Handle cupcakes differently
+      if (cakeType === 'cupcakes') {
+        if (!cupcakeType || !quantity) {
+          setEstimatedPrice(0);
+          setDepositAmount(0);
+          return;
+        }
+        
+        const selectedCupcakeType = cupcakeTypes.find(c => c.value === cupcakeType);
+        if (selectedCupcakeType) {
+          const totalPrice = selectedCupcakeType.price * quantity;
+          const deposit = totalPrice * 0.2;
+          setEstimatedPrice(totalPrice);
+          setDepositAmount(deposit);
+        }
+        return;
+      }
+
+      // Handle special pricing for specific cake types
+      if (cakeType === 'round-cake' && cakeSize) {
+        const sizePrice = {
+          '4-inch': 50,
+          '6-inch': 70,
+          '8-inch': 90
+        };
+        const price = sizePrice[cakeSize as keyof typeof sizePrice] || 50;
+        const deposit = price * 0.2;
+        setEstimatedPrice(price);
+        setDepositAmount(deposit);
+        return;
+      }
+
+      if (cakeType === 'heart-cake' && cakeSize) {
+        const price = cakeSize === 'small-heart' ? 70 : 90;
+        const deposit = price * 0.2;
+        setEstimatedPrice(price);
+        setDepositAmount(deposit);
+        return;
+      }
+
+      if (cakeType === 'cheesecake' && cakeSize) {
+        const price = cakeSize === 'single-tier' ? 30 : 50;
+        const deposit = price * 0.2;
+        setEstimatedPrice(price);
+        setDepositAmount(deposit);
+        return;
+      }
+
+      if (cakeType === 'number-letter' && cakeSize) {
+        const price = cakeSize === '1-letter' ? 70 : 110;
+        const deposit = price * 0.2;
+        setEstimatedPrice(price);
+        setDepositAmount(deposit);
+        return;
+      }
+
+      // Handle other cake types with base pricing
       const selectedCake = cakeTypes.find(c => c.value === cakeType);
-      const selectedSize = cakeSizes.find(s => s.value === cakeSize);
-      const selectedFlavour = flavours.find(f => f.value === cakeFlavour);
-
-      if (selectedCake && selectedSize) {
-        const basePrice = selectedCake.basePrice;
-        const sizeMultiplier = selectedSize.multiplier;
-        const flavourSurcharge = selectedFlavour?.surcharge || 0;
-
-        const totalPrice = (basePrice * sizeMultiplier) + flavourSurcharge;
+      if (selectedCake && selectedCake.basePrice > 0) {
+        const totalPrice = selectedCake.basePrice;
         const deposit = totalPrice * 0.2;
-
         setEstimatedPrice(totalPrice);
         setDepositAmount(deposit);
       }
