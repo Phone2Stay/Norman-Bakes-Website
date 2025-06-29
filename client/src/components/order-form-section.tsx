@@ -196,13 +196,14 @@ export default function OrderFormSection() {
       
       toast({
         title: "Order Submitted",
-        description: "Your order has been submitted successfully!",
+        description: "Your order has been submitted successfully! Redirecting to payment...",
       });
 
-      // Reset form
-      form.reset();
-      setEstimatedPrice(0);
-      setDepositAmount(0);
+      // Automatically proceed to payment
+      if (depositAmount > 0) {
+        setCurrentOrderId(order.id);
+        setTimeout(() => handlePayDeposit(), 1000);
+      }
       
     } catch (error: any) {
       toast({
@@ -213,8 +214,10 @@ export default function OrderFormSection() {
     }
   };
 
-  const handlePayDeposit = async () => {
-    if (!currentOrderId || depositAmount === 0) {
+  const handlePayDeposit = async (orderId?: number) => {
+    const orderIdToUse = orderId || currentOrderId;
+    
+    if (!orderIdToUse || depositAmount === 0) {
       toast({
         title: "Error",
         description: "Please submit your order first.",
@@ -226,7 +229,7 @@ export default function OrderFormSection() {
     try {
       const response = await apiRequest("POST", "/api/create-payment-intent", {
         amount: depositAmount,
-        orderId: currentOrderId
+        orderId: orderIdToUse
       });
       
       const { clientSecret } = await response.json();
@@ -445,22 +448,13 @@ export default function OrderFormSection() {
                     </CardContent>
                   </Card>
 
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <Button 
-                      type="submit" 
-                      className="flex-1 bg-gold hover:bg-gold-dark text-black font-semibold"
-                    >
-                      Submit Order Request
-                    </Button>
-                    <Button 
-                      type="button"
-                      onClick={handlePayDeposit}
-                      disabled={!currentOrderId || depositAmount === 0}
-                      className="flex-1 bg-charcoal hover:bg-charcoal/90 text-white font-semibold"
-                    >
-                      Pay Deposit with Stripe
-                    </Button>
-                  </div>
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-gold hover:bg-gold-dark text-black font-semibold text-lg py-3"
+                    disabled={estimatedPrice === 0}
+                  >
+                    Submit Order & Pay Deposit (£{depositAmount.toFixed(2)})
+                  </Button>
                 </form>
               </Form>
             ) : (
@@ -478,7 +472,13 @@ export default function OrderFormSection() {
                   </Elements>
                 )}
                 <Button 
-                  onClick={() => setShowPayment(false)}
+                  onClick={() => {
+                    setShowPayment(false);
+                    setCurrentOrderId(null);
+                    form.reset();
+                    setEstimatedPrice(0);
+                    setDepositAmount(0);
+                  }}
                   variant="outline"
                   className="w-full mt-4"
                 >
