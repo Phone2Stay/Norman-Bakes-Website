@@ -23,12 +23,15 @@ function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <img 
-              src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=60" 
-              alt="Norman Bakes Logo" 
-              className="h-10 w-auto"
-            />
-            <span className="ml-3 text-gold font-serif text-xl font-bold">Norman Bakes</span>
+            <div className="bg-gold rounded-full p-2 mr-3">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <path d="M8 20 C8 18, 10 16, 12 16 L20 16 C22 16, 24 18, 24 20 L22 24 L10 24 Z" fill="#000"/>
+                <rect x="10" y="18" width="12" height="2" fill="#DAA520"/>
+                <rect x="11" y="14" width="10" height="2" fill="#DAA520"/>
+                <rect x="12" y="10" width="8" height="2" fill="#DAA520"/>
+              </svg>
+            </div>
+            <span className="text-gold font-serif text-xl font-bold">Norman Bakes</span>
           </div>
           <div className="hidden md:block">
             <div className="flex items-center space-x-8">
