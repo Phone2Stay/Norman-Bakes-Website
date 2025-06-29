@@ -99,8 +99,16 @@ Required environment variables:
 - June 29, 2025: Initial setup and complete website build
 - June 29, 2025: Integrated actual Norman Bakes logo
 - June 29, 2025: Updated order form to single button flow
-- June 29, 2025: Enhanced gallery with 12 professional cake images
+- June 29, 2025: Enhanced gallery with 17 professional cake images from Norman Bakes
 - June 29, 2025: Streamlined order submission and payment process
+- June 29, 2025: Updated pricing structure with exact Norman Bakes pricing from provided image:
+  - Round cakes: 4" (£50), 6" (£70), 8" (£90)
+  - Heart cakes: Small 2-layer (£70), Large 3-layer (£90)
+  - Cheesecakes: Single tier (£30), Two tier (£50)
+  - Number/Letter cakes: 1 digit (£70), 2 digits (£110)
+  - Cupcakes: Standard (£2), Personalised (£2.50), Decorated (£3)
+  - Other items: Tray bakes (£30), Bento cakes (£40), Brownies (£22)
+- June 29, 2025: Added filling options display and cupcake pricing guidance
 
 ## User Preferences
 

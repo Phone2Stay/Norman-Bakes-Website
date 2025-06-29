@@ -167,33 +167,17 @@ export default function OrderFormSection() {
     },
   });
 
-  const watchedValues = form.watch(['cakeType', 'cakeSize', 'cakeFlavour', 'cupcakeType', 'quantity']);
+  const watchedType = form.watch('cakeType');
+  const watchedSize = form.watch('cakeSize');
 
   useEffect(() => {
     const calculatePrice = () => {
-      const [cakeType, cakeSize, cakeFlavour, cupcakeType, quantity] = watchedValues;
+      const cakeType = watchedType;
+      const cakeSize = watchedSize;
       
       if (!cakeType) {
         setEstimatedPrice(0);
         setDepositAmount(0);
-        return;
-      }
-
-      // Handle cupcakes differently
-      if (cakeType === 'cupcakes') {
-        if (!cupcakeType || !quantity) {
-          setEstimatedPrice(0);
-          setDepositAmount(0);
-          return;
-        }
-        
-        const selectedCupcakeType = cupcakeTypes.find(c => c.value === cupcakeType);
-        if (selectedCupcakeType) {
-          const totalPrice = selectedCupcakeType.price * quantity;
-          const deposit = totalPrice * 0.2;
-          setEstimatedPrice(totalPrice);
-          setDepositAmount(deposit);
-        }
         return;
       }
 
@@ -246,7 +230,7 @@ export default function OrderFormSection() {
     };
 
     calculatePrice();
-  }, [watchedValues]);
+  }, [watchedType, watchedSize]);
 
   // Set minimum date to tomorrow
   const tomorrow = new Date();
@@ -486,6 +470,20 @@ export default function OrderFormSection() {
                       )}
                     />
                   </div>
+
+                  {/* Note about fillings and special requirements */}
+                  {form.watch('cakeType') && !['wedding', 'brownies'].includes(form.watch('cakeType')) && (
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <p className="text-sm text-gray-700">
+                        <strong>Available Fillings:</strong> No filling, Strawberry jam, Raspberry jam, Vanilla buttercream, Chocolate buttercream, Lemon curd, Nutella
+                      </p>
+                      {form.watch('cakeType') === 'cupcakes' && (
+                        <p className="text-sm text-gray-700 mt-2">
+                          <strong>Cupcake Options:</strong> Standard (£2), Personalised (£2.50), Highly decorated (£3) - Please specify preference and quantity in special requirements below
+                        </p>
+                      )}
+                    </div>
+                  )}
 
                   <FormField
                     control={form.control}
