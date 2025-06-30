@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "wouter";
 import HeroSection from "@/components/hero-section";
 import GallerySection from "@/components/gallery-section";
 import DealsSection from "@/components/deals-section";
@@ -185,7 +186,7 @@ function Footer() {
         <div className="text-center">
           <div className="flex items-center justify-center mb-6">
             <img 
-              src="/attached_assets/image34_1751219725331.jpeg" 
+              src={normanBakesLogo} 
               alt="Norman Bakes Logo" 
               className="h-10 w-auto mr-3"
             />
@@ -216,7 +217,6 @@ function Footer() {
               <Mail size={24} />
             </a>
           </div>
-          <p className="text-gray-500 text-sm">&copy; 2024 Norman Bakes. All rights reserved.</p>
         </div>
       </div>
     </footer>

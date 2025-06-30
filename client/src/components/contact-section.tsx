@@ -55,36 +55,13 @@ export default function ContactSection() {
           </div>
           
           <div>
-            <div className="bg-gray-100 rounded-lg shadow-lg p-6 text-center">
-              <svg className="w-full h-64 mx-auto mb-4" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-                {/* Wales coastline outline */}
-                <path d="M50 250 Q80 240 120 230 Q160 220 200 210 Q240 200 280 210 Q320 220 350 230" 
-                      fill="none" stroke="#3b82f6" strokeWidth="3"/>
-                
-                {/* Cardiff area */}
-                <circle cx="180" cy="180" r="4" fill="#6b7280" />
-                <text x="185" y="185" className="text-xs" fill="#6b7280">Cardiff</text>
-                
-                {/* Barry location - highlighted */}
-                <circle cx="160" cy="200" r="6" fill="#d97706" />
-                <text x="125" y="195" className="text-sm font-bold" fill="#d97706">Barry</text>
-                <text x="110" y="210" className="text-xs" fill="#d97706">Vale of Glamorgan</text>
-                
-                {/* Roads */}
-                <path d="M160 200 L180 180" stroke="#9ca3af" strokeWidth="2" strokeDasharray="5,5" />
-                <path d="M160 200 Q200 190 240 185" stroke="#9ca3af" strokeWidth="1" strokeDasharray="3,3" />
-                
-                {/* Bristol Channel label */}
-                <text x="200" y="250" className="text-sm" fill="#3b82f6">Bristol Channel</text>
-                
-                {/* Compass */}
-                <g transform="translate(320, 50)">
-                  <circle cx="0" cy="0" r="20" fill="white" stroke="#6b7280" strokeWidth="1" />
-                  <path d="M0,-15 L5,0 L0,15 L-5,0 Z" fill="#d97706" />
-                  <text x="0" y="-25" className="text-xs" textAnchor="middle" fill="#6b7280">N</text>
-                </g>
-              </svg>
-              <div className="text-center">
+            <div className="rounded-lg shadow-lg overflow-hidden">
+              <img 
+                src="/attached_assets/image_1751319357252.png" 
+                alt="Beautiful Barry beach with ferris wheel and coastal view" 
+                className="w-full h-64 object-cover"
+              />
+              <div className="bg-white p-6 text-center">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">Our Location</h3>
                 <p className="text-gray-600">Based in Barry, Vale of Glamorgan</p>
                 <p className="text-sm text-gray-500 mt-1">Serving South Wales with delicious cakes</p>
