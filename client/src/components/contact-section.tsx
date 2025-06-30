@@ -1,4 +1,5 @@
 import { Instagram, Facebook, Mail, MapPin, Clock } from "lucide-react";
+import barryBeachImage from "@assets/image_1751319357252.png";
 
 export default function ContactSection() {
   return (
@@ -57,7 +58,7 @@ export default function ContactSection() {
           <div>
             <div className="rounded-lg shadow-lg overflow-hidden">
               <img 
-                src="/attached_assets/image_1751319357252.png" 
+                src={barryBeachImage} 
                 alt="Beautiful Barry beach with ferris wheel and coastal view" 
                 className="w-full h-64 object-cover"
               />
