@@ -217,6 +217,15 @@ function Footer() {
               <Mail size={24} />
             </a>
           </div>
+          <div className="flex justify-center space-x-6 mb-6 text-sm text-gray-400">
+            <Link href="/return-policy" className="hover:text-gold transition-colors">
+              Return Policy
+            </Link>
+            <span>•</span>
+            <Link href="/terms-conditions" className="hover:text-gold transition-colors">
+              Terms & Conditions
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
