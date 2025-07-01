@@ -39,9 +39,10 @@ Product Details:
 - Description: ${orderData.productDetails}
 - Collection Date: ${orderData.collectionDate}
 - Special Requirements: ${orderData.specialRequirements || 'None'}
+- Extras: ${orderData.extras && orderData.extras !== 'none' ? orderData.extras : 'None'}
 
 Payment Information:
-- Deposit Amount: £${orderData.depositAmount}
+- Total Amount: £${orderData.totalAmount}
 - Payment Status: ${orderData.paymentStatus}
 
 Contact the customer to discuss final details and arrange payment.
@@ -128,6 +129,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(deals);
     } catch (error: any) {
       res.status(500).json({ message: "Error fetching seasonal deals: " + error.message });
+    }
+  });
+
+  // Check date availability (max 2 orders per date)
+  app.get("/api/check-date-availability", async (req, res) => {
+    try {
+      const { date } = req.query;
+      if (!date || typeof date !== 'string') {
+        return res.status(400).json({ message: "Date parameter is required" });
+      }
+      
+      const orderCount = await storage.getOrderCountForDate(date);
+      const available = orderCount < 2;
+      
+      res.json({ available, currentOrders: orderCount });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error checking date availability: " + error.message });
     }
   });
 

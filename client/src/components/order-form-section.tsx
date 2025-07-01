@@ -42,7 +42,7 @@ const productTypes = [
 ];
 
 const extrasOptions = [
-  { value: "", label: "No extras", price: 0 },
+  { value: "none", label: "No extras", price: 0 },
   { value: "strawberries", label: "Chocolate covered strawberries", price: 5 },
   { value: "toppers", label: "Cake toppers (specify in details)", price: 10 },
 ];
@@ -118,7 +118,7 @@ export default function OrderFormSection() {
       productType: "",
       productDetails: "",
       specialRequirements: "",
-      extras: "",
+      extras: "none",
     }
   });
 
@@ -200,16 +200,19 @@ export default function OrderFormSection() {
             <CardHeader>
               <CardTitle className="text-center text-gold">Complete Your Order</CardTitle>
               <p className="text-center text-sm text-gray-600">
-                £{DEPOSIT_AMOUNT} deposit required to confirm your order
+                {selectedProduct?.isDeposit 
+                  ? `£${totalAmount} deposit required to confirm your order`
+                  : `Total payment: £${totalAmount}`
+                }
               </p>
             </CardHeader>
             <CardContent>
               <Elements stripe={stripePromise} options={{
                 mode: 'payment',
-                amount: DEPOSIT_AMOUNT * 100,
+                amount: totalAmount * 100,
                 currency: 'gbp',
               }}>
-                <PaymentForm orderId={orderId} onSuccess={handlePaymentSuccess} />
+                <PaymentForm orderId={orderId} amount={totalAmount} onSuccess={handlePaymentSuccess} />
               </Elements>
             </CardContent>
           </Card>
@@ -405,7 +408,37 @@ export default function OrderFormSection() {
                         <SelectContent>
                           {productTypes.map((type) => (
                             <SelectItem key={type.value} value={type.value}>
-                              {type.label}
+                              {type.label} - £{type.price}{type.isDeposit ? ' (deposit only)' : ''}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {selectedProduct?.isDeposit && (
+                        <p className="text-sm text-amber-600 mt-1">
+                          This is a £20 deposit. The full price will be discussed and agreed upon based on your specific requirements.
+                        </p>
+                      )}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="extras"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Extras (Optional)</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select any extras" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {extrasOptions.map((extra) => (
+                            <SelectItem key={extra.value} value={extra.value}>
+                              {extra.label}{extra.price > 0 ? ` - £${extra.price}` : ''}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -450,12 +483,41 @@ export default function OrderFormSection() {
                   )}
                 />
 
+                {/* Total Price Display */}
+                {selectedProduct && (
+                  <div className="bg-gray-100 p-4 rounded-lg">
+                    <div className="flex justify-between items-center text-sm">
+                      <span>Product:</span>
+                      <span>£{selectedProduct.price}</span>
+                    </div>
+                    {selectedExtra && selectedExtra.price > 0 && (
+                      <div className="flex justify-between items-center text-sm">
+                        <span>Extras:</span>
+                        <span>£{selectedExtra.price}</span>
+                      </div>
+                    )}
+                    <hr className="my-2" />
+                    <div className="flex justify-between items-center font-semibold">
+                      <span>Total:</span>
+                      <span>£{calculateTotal()}</span>
+                    </div>
+                    {selectedProduct.isDeposit && (
+                      <p className="text-xs text-amber-600 mt-1">
+                        Deposit payment - final price to be agreed
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 <Button 
                   type="submit" 
                   className="w-full bg-gold hover:bg-gold-dark text-black font-semibold py-3"
                   size="lg"
                 >
-                  Place Order & Pay £{DEPOSIT_AMOUNT} Deposit
+                  {selectedProduct?.isDeposit 
+                    ? `Place Order & Pay £${calculateTotal()} Deposit`
+                    : `Place Order & Pay £${calculateTotal()}`
+                  }
                 </Button>
               </form>
             </Form>
