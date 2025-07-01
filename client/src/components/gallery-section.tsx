@@ -56,8 +56,11 @@ export default function GallerySection() {
           <h2 className="font-serif text-4xl font-bold text-charcoal mb-4">
             Our <span className="text-gold">Gallery</span>
           </h2>
-          <p className="text-gray-700 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-700 text-lg max-w-2xl mx-auto mb-4">
             Browse through our collection of stunning cake creations, each one crafted with meticulous attention to detail and artistic flair.
+          </p>
+          <p className="text-gold font-medium text-lg">
+            📸 See more of our cake creations on <a href="https://www.facebook.com/NormanBakesCakesToDieFor" target="_blank" rel="noopener noreferrer" className="underline hover:text-yellow-600">Facebook</a> and <a href="https://www.instagram.com/normanbakes38" target="_blank" rel="noopener noreferrer" className="underline hover:text-yellow-600">Instagram</a>
           </p>
         </div>
         

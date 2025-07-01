@@ -33,6 +33,7 @@ const productTypes = [
   { value: "brownie-tower", label: "Brownie/Blondie Tower", price: 40 },
   { value: "cupcakes-6", label: "Cupcake box of 6", price: 12 },
   { value: "cupcakes-12", label: "Cupcake box of 12", price: 24 },
+  { value: "cupcakes-24", label: "Cupcake box of 24", price: 48 },
   { value: "brownies-box", label: "Brownies/Blondies box", price: 22 },
   { value: "cheesecake-single", label: "Cheesecake (single)", price: 30 },
   { value: "cheesecake-double", label: "Cheesecake (double)", price: 50 },
@@ -46,6 +47,12 @@ const extrasOptions = [
   { value: "none", label: "No extras", price: 0 },
   { value: "strawberries", label: "Chocolate covered strawberries", price: 5 },
   { value: "toppers", label: "Cake toppers (specify in details)", price: 10 },
+  { value: "cupcake-toppers-6", label: "Cupcake toppers - personalised (box of 6)", price: 3 },
+  { value: "cupcake-toppers-12", label: "Cupcake toppers - personalised (box of 12)", price: 6 },
+  { value: "cupcake-toppers-24", label: "Cupcake toppers - personalised (box of 24)", price: 12 },
+  { value: "decorated-toppers-6", label: "Highly decorated cupcake toppers (box of 6)", price: 6 },
+  { value: "decorated-toppers-12", label: "Highly decorated cupcake toppers (box of 12)", price: 12 },
+  { value: "decorated-toppers-24", label: "Highly decorated cupcake toppers (box of 24)", price: 24 },
 ];
 
 function PaymentForm({ orderId, amount, onSuccess }: { orderId: number, amount: number, onSuccess: () => void }) {
@@ -230,7 +237,7 @@ export default function OrderFormSection() {
             Our <span className="text-gold">Products & Pricing</span>
           </h2>
           <p className="text-xl text-gray-700 max-w-2xl mx-auto mb-8">
-            Browse our full range and place your order with a £10 deposit
+            Browse our full range and place your order
           </p>
         </div>
 
@@ -289,7 +296,7 @@ export default function OrderFormSection() {
             <CardContent className="space-y-2">
               <p>Standard - <strong>£2 each</strong></p>
               <p>Personalised - <strong>£2.50 each</strong></p>
-              <p>Decorated - <strong>£3 each</strong></p>
+              <p>Highly decorated - <strong>£3 each</strong></p>
               <p className="text-sm text-gray-600">Minimum order 6 cupcakes</p>
             </CardContent>
           </Card>
