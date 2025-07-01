@@ -43,22 +43,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const mailOptions = {
         from: process.env.EMAIL_USER || 'your-email@gmail.com',
         to: 'normanbakes38@gmail.com',
-        subject: `New Cake Order - ${order.cakeType}`,
+        subject: `New Cake Order - ${order.productType}`,
         html: `
-          <h2>New Cake Order Received</h2>
-          <p><strong>Order ID:</strong> ${order.id}</p>
-          <p><strong>Customer:</strong> ${order.customerName}</p>
-          <p><strong>Email:</strong> ${order.customerEmail}</p>
-          <p><strong>Phone:</strong> ${order.customerPhone}</p>
-          <p><strong>Collection Date:</strong> ${order.collectionDate}</p>
-          <p><strong>Cake Type:</strong> ${order.cakeType}</p>
-          <p><strong>Size:</strong> ${order.cakeSize}</p>
-          <p><strong>Flavour:</strong> ${order.cakeFlavour || 'Not specified'}</p>
-          <p><strong>Theme:</strong> ${order.cakeTheme || 'Not specified'}</p>
-          <p><strong>Special Requirements:</strong> ${order.specialRequirements || 'None'}</p>
-          <p><strong>Estimated Price:</strong> £${order.estimatedPrice}</p>
-          <p><strong>Deposit Required:</strong> £${order.depositAmount}</p>
-          <p><strong>Deposit Status:</strong> ${order.depositPaid ? 'Paid' : 'Pending'}</p>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <div style="background-color: #000; color: #d97706; padding: 20px; text-align: center;">
+              <h2 style="margin: 0; color: #d97706;">New Cake Order Received</h2>
+            </div>
+            <div style="padding: 20px; background-color: #f9f9f9;">
+              <h3 style="color: #000; border-bottom: 2px solid #d97706; padding-bottom: 10px;">Order Details</h3>
+              <p><strong>Order ID:</strong> ${order.id}</p>
+              <p><strong>Date Submitted:</strong> ${new Date(order.createdAt!).toLocaleDateString('en-GB')}</p>
+              
+              <h3 style="color: #000; border-bottom: 2px solid #d97706; padding-bottom: 10px;">Customer Information</h3>
+              <p><strong>Name:</strong> ${order.customerName}</p>
+              <p><strong>Email:</strong> ${order.customerEmail}</p>
+              <p><strong>Phone:</strong> ${order.customerPhone}</p>
+              <p><strong>Collection Date:</strong> ${order.collectionDate}</p>
+              
+              <h3 style="color: #000; border-bottom: 2px solid #d97706; padding-bottom: 10px;">Product Details</h3>
+              <p><strong>Product Type:</strong> ${order.productType}</p>
+              <div style="background-color: #fff; padding: 15px; border-left: 4px solid #d97706; margin: 10px 0;">
+                <strong>Product Details:</strong><br>
+                ${order.productDetails}
+              </div>
+              ${order.specialRequirements ? `
+              <div style="background-color: #fff; padding: 15px; border-left: 4px solid #d97706; margin: 10px 0;">
+                <strong>Special Requirements:</strong><br>
+                ${order.specialRequirements}
+              </div>
+              ` : ''}
+              
+              <h3 style="color: #000; border-bottom: 2px solid #d97706; padding-bottom: 10px;">Payment Information</h3>
+              <p><strong>Deposit Amount:</strong> £${order.depositAmount}</p>
+              <p><strong>Payment Status:</strong> ${order.paymentStatus === 'paid' ? '✅ Deposit Paid' : '⏳ Payment Pending'}</p>
+              
+              <div style="background-color: #d97706; color: #000; padding: 15px; text-align: center; margin-top: 20px;">
+                <strong>Contact the customer to discuss full details and arrange final payment</strong>
+              </div>
+            </div>
+          </div>
         `
       };
 
@@ -104,7 +127,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           customerEmail: order.customerEmail,
           customerName: order.customerName
         },
-        description: `Deposit for ${order.cakeType} - Order #${orderId}`
+        description: `Deposit for ${order.productType} - Order #${orderId}`
       });
 
       res.json({ clientSecret: paymentIntent.client_secret });
@@ -131,15 +154,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const mailOptions = {
         from: process.env.EMAIL_USER || 'your-email@gmail.com',
         to: 'normanbakes38@gmail.com',
-        subject: `Deposit Paid - Order #${orderId}`,
+        subject: `💰 DEPOSIT PAID - Order #${orderId} - ${updatedOrder.customerName}`,
         html: `
-          <h2>Deposit Payment Confirmed</h2>
-          <p><strong>Order ID:</strong> ${orderId}</p>
-          <p><strong>Customer:</strong> ${updatedOrder.customerName}</p>
-          <p><strong>Email:</strong> ${updatedOrder.customerEmail}</p>
-          <p><strong>Deposit Amount:</strong> £${updatedOrder.depositAmount}</p>
-          <p><strong>Payment Intent ID:</strong> ${paymentIntentId}</p>
-          <p>The customer has successfully paid their deposit.</p>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <div style="background-color: #d97706; color: #000; padding: 20px; text-align: center;">
+              <h2 style="margin: 0; color: #000;">✅ DEPOSIT PAYMENT CONFIRMED</h2>
+            </div>
+            <div style="padding: 20px; background-color: #f0f8f0; border: 2px solid #28a745;">
+              <h3 style="color: #28a745; text-align: center; margin-top: 0;">Ready to start baking! 🎂</h3>
+              
+              <div style="background-color: #fff; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                <h4 style="color: #000; margin-top: 0;">Order Information</h4>
+                <p><strong>Order ID:</strong> #${orderId}</p>
+                <p><strong>Product Type:</strong> ${updatedOrder.productType}</p>
+                <p><strong>Product Details:</strong> ${updatedOrder.productDetails}</p>
+                <p><strong>Collection Date:</strong> ${updatedOrder.collectionDate}</p>
+              </div>
+              
+              <div style="background-color: #fff; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                <h4 style="color: #000; margin-top: 0;">Customer Details</h4>
+                <p><strong>Name:</strong> ${updatedOrder.customerName}</p>
+                <p><strong>Email:</strong> ${updatedOrder.customerEmail}</p>
+                <p><strong>Phone:</strong> ${updatedOrder.customerPhone}</p>
+              </div>
+              
+              <div style="background-color: #28a745; color: #fff; padding: 15px; text-align: center; border-radius: 5px;">
+                <h4 style="margin: 5px 0; color: #fff;">💳 Payment Confirmed: £${updatedOrder.depositAmount}</h4>
+                <p style="margin: 5px 0;">Stripe Payment ID: ${paymentIntentId}</p>
+              </div>
+              
+              <div style="background-color: #fff; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #d97706;">
+                <strong>Next Steps:</strong>
+                <ul style="margin: 10px 0;">
+                  <li>Contact customer to confirm final details</li>
+                  <li>Discuss any customisation requirements</li>
+                  <li>Arrange collection/delivery logistics</li>
+                  <li>Calculate and collect remaining balance</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         `
       };
 
