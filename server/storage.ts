@@ -8,6 +8,7 @@ export interface IStorage {
   createOrder(order: InsertOrder): Promise<Order>;
   getOrder(id: number): Promise<Order | undefined>;
   updateOrderPaymentStatus(id: number, stripePaymentIntentId: string): Promise<Order | undefined>;
+  getOrderCountForDate(date: string): Promise<number>;
   
   getActiveSeasonalDeals(): Promise<SeasonalDeal[]>;
   createSeasonalDeal(deal: InsertSeasonalDeal): Promise<SeasonalDeal>;
@@ -58,7 +59,8 @@ export class MemStorage implements IStorage {
       productType: insertOrder.productType,
       productDetails: insertOrder.productDetails,
       specialRequirements: insertOrder.specialRequirements || null,
-      depositAmount: insertOrder.depositAmount ?? 10,
+      extras: insertOrder.extras || null,
+      totalAmount: insertOrder.totalAmount,
       stripePaymentIntentId: null,
       paymentStatus: "pending",
       createdAt: new Date()
@@ -79,6 +81,10 @@ export class MemStorage implements IStorage {
       return updatedOrder;
     }
     return undefined;
+  }
+
+  async getOrderCountForDate(date: string): Promise<number> {
+    return Array.from(this.orders.values()).filter(order => order.collectionDate === date).length;
   }
 
   async getActiveSeasonalDeals(): Promise<SeasonalDeal[]> {

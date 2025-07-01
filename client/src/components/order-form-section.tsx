@@ -23,26 +23,31 @@ const orderSchema = z.object({
   productType: z.string().min(1, "Product type is required"),
   productDetails: z.string().min(1, "Product details are required"),
   specialRequirements: z.string().optional(),
+  extras: z.string().optional(),
 });
 
 type OrderFormData = z.infer<typeof orderSchema>;
 
 const productTypes = [
-  { value: "tier-cake", label: "Tier Cake" },
-  { value: "heart-cake", label: "Heart Cake" },
-  { value: "cheesecake", label: "Cheesecake" },
-  { value: "cupcakes", label: "Cupcakes" },
-  { value: "tray-bake", label: "Tray Bake" },
-  { value: "number-letter", label: "Number/Letter Cake" },
-  { value: "bento-cake", label: "Bento Cake" },
-  { value: "bento-boxes", label: "Bento Boxes" },
-  { value: "brownies", label: "Brownies/Blondies" },
-  { value: "wedding", label: "Wedding Cake" },
+  { value: "brownie-tower", label: "Brownie/Blondie Tower", price: 40 },
+  { value: "cupcakes-6", label: "Cupcake box of 6", price: 12 },
+  { value: "cupcakes-12", label: "Cupcake box of 12", price: 24 },
+  { value: "brownies-box", label: "Brownies/Blondies box", price: 22 },
+  { value: "cheesecake-single", label: "Cheesecake (single)", price: 30 },
+  { value: "cheesecake-double", label: "Cheesecake (double)", price: 50 },
+  { value: "tray-bake", label: "Tray bake", price: 30 },
+  { value: "bento-4", label: "Bento Box with 4 cupcakes", price: 35 },
+  { value: "bento-8", label: "Bento Box with 8 cupcakes", price: 45 },
+  { value: "other-cake", label: "Other Cake", price: 20, isDeposit: true },
 ];
 
-const DEPOSIT_AMOUNT = 10; // Fixed £10 deposit
+const extrasOptions = [
+  { value: "", label: "No extras", price: 0 },
+  { value: "strawberries", label: "Chocolate covered strawberries", price: 5 },
+  { value: "toppers", label: "Cake toppers (specify in details)", price: 10 },
+];
 
-function PaymentForm({ orderId, onSuccess }: { orderId: number, onSuccess: () => void }) {
+function PaymentForm({ orderId, amount, onSuccess }: { orderId: number, amount: number, onSuccess: () => void }) {
   const stripe = useStripe();
   const elements = useElements();
   const { toast } = useToast();
@@ -90,7 +95,7 @@ function PaymentForm({ orderId, onSuccess }: { orderId: number, onSuccess: () =>
         disabled={!stripe || processing}
         className="w-full bg-gold hover:bg-gold-dark text-black font-semibold"
       >
-        {processing ? "Processing..." : `Pay £${DEPOSIT_AMOUNT} Deposit`}
+        {processing ? "Processing..." : `Pay £${amount}`}
       </Button>
     </form>
   );
@@ -99,6 +104,8 @@ function PaymentForm({ orderId, onSuccess }: { orderId: number, onSuccess: () =>
 export default function OrderFormSection() {
   const [showPayment, setShowPayment] = useState(false);
   const [orderId, setOrderId] = useState<number | null>(null);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [unavailableDates, setUnavailableDates] = useState<string[]>([]);
   const { toast } = useToast();
   
   const form = useForm<OrderFormData>({
@@ -111,23 +118,61 @@ export default function OrderFormSection() {
       productType: "",
       productDetails: "",
       specialRequirements: "",
+      extras: "",
     }
   });
 
+  const selectedProduct = productTypes.find(p => p.value === form.watch("productType"));
+  const selectedExtra = extrasOptions.find(e => e.value === form.watch("extras"));
+  
+  // Calculate total amount
+  const calculateTotal = () => {
+    const productPrice = selectedProduct?.price || 0;
+    const extraPrice = selectedExtra?.price || 0;
+    return productPrice + extraPrice;
+  };
+
+  // Check date availability when collection date changes
+  const checkDateAvailability = async (date: string) => {
+    try {
+      const response = await apiRequest("GET", `/api/check-date-availability?date=${date}`);
+      const { available } = await response.json();
+      return available;
+    } catch (error) {
+      return true; // Default to available if check fails
+    }
+  };
+
   const onSubmit = async (data: OrderFormData) => {
     try {
+      // Check date availability first
+      const dateAvailable = await checkDateAvailability(data.collectionDate);
+      if (!dateAvailable) {
+        toast({
+          title: "Date Unavailable",
+          description: "This date is fully booked. Please select another date.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const total = calculateTotal();
       const response = await apiRequest("POST", "/api/orders", {
         ...data,
-        depositAmount: DEPOSIT_AMOUNT
+        totalAmount: total
       });
       
       const order = await response.json();
       setOrderId(order.id);
+      setTotalAmount(total);
       setShowPayment(true);
       
+      const isDeposit = selectedProduct?.isDeposit;
       toast({
         title: "Order Created",
-        description: "Please complete your £10 deposit payment.",
+        description: isDeposit 
+          ? "Please complete your £20 deposit payment. We'll contact you to discuss the full cake details."
+          : `Please complete your £${total} payment.`,
       });
     } catch (error) {
       toast({
