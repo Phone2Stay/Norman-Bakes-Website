@@ -12,27 +12,80 @@ if (process.env.STRIPE_SECRET_KEY) {
   stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 }
 
-// Free email solution - will log order details for now
+// Payment confirmation notification
+async function sendPaymentConfirmation(orderData: any, paymentIntentId: string) {
+  try {
+    const formData = new FormData();
+    formData.append('_replyto', orderData.customerEmail);
+    formData.append('_subject', `Payment Received - Order #${orderData.id}`);
+    formData.append('_template', 'table');
+    formData.append('Order_ID', orderData.id.toString());
+    formData.append('Payment_Status', '✅ DEPOSIT PAID');
+    formData.append('Payment_Amount', `£${orderData.depositAmount}`);
+    formData.append('Stripe_Payment_ID', paymentIntentId);
+    formData.append('Customer_Name', orderData.customerName);
+    formData.append('Customer_Email', orderData.customerEmail);
+    formData.append('Customer_Phone', orderData.customerPhone);
+    formData.append('Product_Type', orderData.productType);
+    formData.append('Collection_Date', orderData.collectionDate);
+    formData.append('Payment_Date', new Date().toLocaleDateString('en-GB'));
+
+    const response = await fetch('https://formspree.io/f/xpzgrkek', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+
+    if (response.ok) {
+      console.log('Payment confirmation sent successfully to normanbakes38@gmail.com');
+      return true;
+    } else {
+      console.error('Failed to send payment confirmation:', response.statusText);
+      return false;
+    }
+  } catch (error) {
+    console.error('Payment confirmation failed:', error);
+    return false;
+  }
+}
+
+// Permanent free email solution using Formspree
 async function sendEmailNotification(orderData: any) {
   try {
-    // For now, we'll log the order details - you can set up a free email service later
-    console.log('=== NEW CAKE ORDER RECEIVED ===');
-    console.log(`Customer: ${orderData.customerName}`);
-    console.log(`Email: ${orderData.customerEmail}`);
-    console.log(`Phone: ${orderData.customerPhone}`);
-    console.log(`Product: ${orderData.productType}`);
-    console.log(`Collection Date: ${orderData.collectionDate}`);
-    console.log(`Deposit: £${orderData.depositAmount}`);
-    console.log(`Order ID: ${orderData.id}`);
-    console.log('===============================');
-    
-    // Option 1: Use a free email service like Formspree
-    // You can create a free account at https://formspree.io and get your own form endpoint
-    
-    // Option 2: Use a webhook service that forwards to email
-    // We'll implement this approach
-    
-    return true; // Return true for now since we're logging
+    // Use Formspree's free service to send emails directly to your inbox
+    const formData = new FormData();
+    formData.append('_replyto', orderData.customerEmail);
+    formData.append('_subject', `New Cake Order - ${orderData.productType}`);
+    formData.append('_template', 'table');
+    formData.append('Order_ID', orderData.id.toString());
+    formData.append('Customer_Name', orderData.customerName);
+    formData.append('Customer_Email', orderData.customerEmail);
+    formData.append('Customer_Phone', orderData.customerPhone);
+    formData.append('Collection_Date', orderData.collectionDate);
+    formData.append('Product_Type', orderData.productType);
+    formData.append('Product_Details', orderData.productDetails);
+    formData.append('Special_Requirements', orderData.specialRequirements || 'None');
+    formData.append('Deposit_Amount', `£${orderData.depositAmount}`);
+    formData.append('Payment_Status', orderData.paymentStatus);
+    formData.append('Order_Date', new Date(orderData.createdAt).toLocaleDateString('en-GB'));
+
+    const response = await fetch('https://formspree.io/f/xpzgrkek', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+
+    if (response.ok) {
+      console.log('Order notification sent successfully to normanbakes38@gmail.com');
+      return true;
+    } else {
+      console.error('Failed to send order notification:', response.statusText);
+      return false;
+    }
   } catch (error) {
     console.error('Email notification failed:', error);
     return false;
@@ -57,56 +110,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = insertOrderSchema.parse(req.body);
       const order = await storage.createOrder(validatedData);
       
-      // Send email notification
-      const mailOptions = {
-        from: process.env.EMAIL_USER || 'your-email@gmail.com',
-        to: 'normanbakes38@gmail.com',
-        subject: `New Cake Order - ${order.productType}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <div style="background-color: #000; color: #d97706; padding: 20px; text-align: center;">
-              <h2 style="margin: 0; color: #d97706;">New Cake Order Received</h2>
-            </div>
-            <div style="padding: 20px; background-color: #f9f9f9;">
-              <h3 style="color: #000; border-bottom: 2px solid #d97706; padding-bottom: 10px;">Order Details</h3>
-              <p><strong>Order ID:</strong> ${order.id}</p>
-              <p><strong>Date Submitted:</strong> ${new Date(order.createdAt!).toLocaleDateString('en-GB')}</p>
-              
-              <h3 style="color: #000; border-bottom: 2px solid #d97706; padding-bottom: 10px;">Customer Information</h3>
-              <p><strong>Name:</strong> ${order.customerName}</p>
-              <p><strong>Email:</strong> ${order.customerEmail}</p>
-              <p><strong>Phone:</strong> ${order.customerPhone}</p>
-              <p><strong>Collection Date:</strong> ${order.collectionDate}</p>
-              
-              <h3 style="color: #000; border-bottom: 2px solid #d97706; padding-bottom: 10px;">Product Details</h3>
-              <p><strong>Product Type:</strong> ${order.productType}</p>
-              <div style="background-color: #fff; padding: 15px; border-left: 4px solid #d97706; margin: 10px 0;">
-                <strong>Product Details:</strong><br>
-                ${order.productDetails}
-              </div>
-              ${order.specialRequirements ? `
-              <div style="background-color: #fff; padding: 15px; border-left: 4px solid #d97706; margin: 10px 0;">
-                <strong>Special Requirements:</strong><br>
-                ${order.specialRequirements}
-              </div>
-              ` : ''}
-              
-              <h3 style="color: #000; border-bottom: 2px solid #d97706; padding-bottom: 10px;">Payment Information</h3>
-              <p><strong>Deposit Amount:</strong> £${order.depositAmount}</p>
-              <p><strong>Payment Status:</strong> ${order.paymentStatus === 'paid' ? '✅ Deposit Paid' : '⏳ Payment Pending'}</p>
-              
-              <div style="background-color: #d97706; color: #000; padding: 15px; text-align: center; margin-top: 20px;">
-                <strong>Contact the customer to discuss full details and arrange final payment</strong>
-              </div>
-            </div>
-          </div>
-        `
-      };
-
+      // Send notification using free console logging approach
       try {
-        await transporter.sendMail(mailOptions);
+        await sendEmailNotification(order);
       } catch (emailError) {
-        console.error('Email sending failed:', emailError);
+        console.error('Email notification failed:', emailError);
       }
 
       res.json(order);
@@ -215,10 +223,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         `
       };
 
+      // Send payment confirmation notification
       try {
-        await transporter.sendMail(mailOptions);
-      } catch (emailError) {
-        console.error('Confirmation email sending failed:', emailError);
+        await sendPaymentConfirmation(updatedOrder, paymentIntentId);
+      } catch (error) {
+        console.error('Payment confirmation notification failed:', error);
       }
 
       res.json(updatedOrder);
