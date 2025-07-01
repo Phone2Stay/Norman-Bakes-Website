@@ -7,7 +7,10 @@ import stitchCakeImage from "@assets/image_1751231066978.png";
 import birthdayCakeImage from "@assets/image_1751231108004.png";
 import portiaCakeImage from "@assets/image_1751231154422.png";
 import heartCakesImage from "@assets/image_1751231200383.png";
-import roseCupcakesImage from "@assets/image_1751231264565.png";
+import newCupcakesImage from "@assets/new_cupcakes_2025.jpeg";
+import additionalCake1Image from "@assets/additional_cake_1.jpeg";
+import additionalCake2Image from "@assets/additional_cake_2.jpeg";
+import additionalCake3Image from "@assets/additional_cake_3.jpeg";
 
 const galleryImages = [
   {
@@ -35,8 +38,20 @@ const galleryImages = [
     alt: "Collection of celebration cakes including heart-shaped designs, anniversary cakes, and themed creations"
   },
   {
-    src: roseCupcakesImage,
-    alt: "Beautiful selection of pink rose-themed cupcakes with intricate buttercream decorations"
+    src: newCupcakesImage,
+    alt: "Beautiful collection of freshly decorated cupcakes showcasing Norman Bakes' artistry"
+  },
+  {
+    src: additionalCake1Image,
+    alt: "Stunning custom cake creation demonstrating Norman Bakes' exceptional decorating skills"
+  },
+  {
+    src: additionalCake2Image,
+    alt: "Elegant celebration cake featuring Norman Bakes' signature design style"
+  },
+  {
+    src: additionalCake3Image,
+    alt: "Premium cake design showcasing Norman Bakes' attention to detail and craftsmanship"
   }
 ];
 

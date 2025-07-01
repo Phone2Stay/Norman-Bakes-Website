@@ -4,6 +4,7 @@ import { Link } from "wouter";
 import HeroSection from "@/components/hero-section";
 import GallerySection from "@/components/gallery-section";
 import DealsSection from "@/components/deals-section";
+import CertificationsSection from "@/components/certifications-section";
 import OrderFormSection from "@/components/order-form-section";
 import ContactSection from "@/components/contact-section";
 import { Card, CardContent } from "@/components/ui/card";
@@ -243,6 +244,7 @@ export default function Home() {
       <HeroSection />
       <AboutSection />
       <GallerySection />
+      <CertificationsSection />
       <DealsSection />
       <SeasonalDealsSection />
       <OrderFormSection />
