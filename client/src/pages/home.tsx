@@ -225,6 +225,10 @@ function Footer() {
             <Link href="/terms-conditions" className="hover:text-gold transition-colors">
               Terms & Conditions
             </Link>
+            <span>•</span>
+            <Link href="/allergen-information" className="hover:text-gold transition-colors">
+              Allergen Information
+            </Link>
           </div>
         </div>
       </div>

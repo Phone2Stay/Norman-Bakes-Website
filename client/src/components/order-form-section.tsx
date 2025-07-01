@@ -245,6 +245,7 @@ export default function OrderFormSection() {
               <p>6" Round - <strong>£70</strong></p>
               <p>8" Round - <strong>£90</strong></p>
               <p className="text-sm text-gray-600">Available in Vanilla, Chocolate, Red Velvet, Lemon, or Carrot sponge</p>
+              <p className="text-sm text-green-600 font-medium">✓ Gluten-free options available - please specify in order details</p>
             </CardContent>
           </Card>
 
