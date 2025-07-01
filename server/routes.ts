@@ -12,82 +12,109 @@ if (process.env.STRIPE_SECRET_KEY) {
   stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 }
 
-// Payment confirmation notification
-async function sendPaymentConfirmation(orderData: any, paymentIntentId: string) {
-  try {
-    const formData = new FormData();
-    formData.append('_replyto', orderData.customerEmail);
-    formData.append('_subject', `Payment Received - Order #${orderData.id}`);
-    formData.append('_template', 'table');
-    formData.append('Order_ID', orderData.id.toString());
-    formData.append('Payment_Status', '✅ DEPOSIT PAID');
-    formData.append('Payment_Amount', `£${orderData.depositAmount}`);
-    formData.append('Stripe_Payment_ID', paymentIntentId);
-    formData.append('Customer_Name', orderData.customerName);
-    formData.append('Customer_Email', orderData.customerEmail);
-    formData.append('Customer_Phone', orderData.customerPhone);
-    formData.append('Product_Type', orderData.productType);
-    formData.append('Collection_Date', orderData.collectionDate);
-    formData.append('Payment_Date', new Date().toLocaleDateString('en-GB'));
-
-    const response = await fetch('https://formspree.io/f/normanbakes38@gmail.com', {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'Accept': 'application/json'
-      }
-    });
-
-    if (response.ok) {
-      console.log('Payment confirmation sent successfully to normanbakes38@gmail.com');
-      return true;
-    } else {
-      console.error('Failed to send payment confirmation:', response.statusText);
-      return false;
-    }
-  } catch (error) {
-    console.error('Payment confirmation failed:', error);
-    return false;
-  }
-}
-
-// Permanent free email solution using Formspree
+// Direct email notifications using formsubmit.co (same as LB Interface approach)
 async function sendEmailNotification(orderData: any) {
   try {
-    // Use Formspree's free service to send emails directly to your inbox
     const formData = new FormData();
-    formData.append('_replyto', orderData.customerEmail);
+    formData.append('name', orderData.customerName);
+    formData.append('email', orderData.customerEmail);
+    formData.append('phone', orderData.customerPhone);
     formData.append('_subject', `New Cake Order - ${orderData.productType}`);
+    formData.append('_captcha', 'false');
     formData.append('_template', 'table');
-    formData.append('Order_ID', orderData.id.toString());
-    formData.append('Customer_Name', orderData.customerName);
-    formData.append('Customer_Email', orderData.customerEmail);
-    formData.append('Customer_Phone', orderData.customerPhone);
-    formData.append('Collection_Date', orderData.collectionDate);
-    formData.append('Product_Type', orderData.productType);
-    formData.append('Product_Details', orderData.productDetails);
-    formData.append('Special_Requirements', orderData.specialRequirements || 'None');
-    formData.append('Deposit_Amount', `£${orderData.depositAmount}`);
-    formData.append('Payment_Status', orderData.paymentStatus);
-    formData.append('Order_Date', new Date(orderData.createdAt).toLocaleDateString('en-GB'));
+    formData.append('message', `
+NEW CAKE ORDER RECEIVED
 
-    const response = await fetch('https://formspree.io/f/normanbakes38@gmail.com', {
+Order Details:
+- Order ID: ${orderData.id}
+- Date: ${new Date(orderData.createdAt).toLocaleDateString('en-GB')}
+
+Customer Information:
+- Name: ${orderData.customerName}
+- Email: ${orderData.customerEmail}
+- Phone: ${orderData.customerPhone}
+
+Product Details:
+- Product Type: ${orderData.productType}
+- Description: ${orderData.productDetails}
+- Collection Date: ${orderData.collectionDate}
+- Special Requirements: ${orderData.specialRequirements || 'None'}
+
+Payment Information:
+- Deposit Amount: £${orderData.depositAmount}
+- Payment Status: ${orderData.paymentStatus}
+
+Contact the customer to discuss final details and arrange payment.
+    `);
+
+    const response = await fetch('https://formsubmit.co/normanbakes38@gmail.com', {
       method: 'POST',
-      body: formData,
-      headers: {
-        'Accept': 'application/json'
-      }
+      body: formData
     });
 
     if (response.ok) {
-      console.log('Order notification sent successfully to normanbakes38@gmail.com');
+      console.log('Order notification sent to normanbakes38@gmail.com');
       return true;
     } else {
-      console.error('Failed to send order notification:', response.statusText);
+      console.error('Failed to send order notification');
       return false;
     }
   } catch (error) {
     console.error('Email notification failed:', error);
+    return false;
+  }
+}
+
+async function sendPaymentConfirmation(orderData: any, paymentIntentId: string) {
+  try {
+    const formData = new FormData();
+    formData.append('name', orderData.customerName);
+    formData.append('email', orderData.customerEmail);
+    formData.append('phone', orderData.customerPhone);
+    formData.append('_subject', `PAYMENT RECEIVED - Order #${orderData.id}`);
+    formData.append('_captcha', 'false');
+    formData.append('_template', 'table');
+    formData.append('message', `
+PAYMENT RECEIVED - DEPOSIT CONFIRMED
+
+Order Information:
+- Order ID: ${orderData.id}
+- Payment Date: ${new Date().toLocaleDateString('en-GB')}
+- Payment Amount: £${orderData.depositAmount}
+- Stripe Payment ID: ${paymentIntentId}
+
+Customer Details:
+- Name: ${orderData.customerName}
+- Email: ${orderData.customerEmail}
+- Phone: ${orderData.customerPhone}
+
+Product Details:
+- Product Type: ${orderData.productType}
+- Collection Date: ${orderData.collectionDate}
+
+STATUS: READY TO START BAKING!
+
+Next Steps:
+- Contact customer to confirm final details
+- Discuss any customisation requirements
+- Arrange collection/delivery logistics
+- Calculate and collect remaining balance
+    `);
+
+    const response = await fetch('https://formsubmit.co/normanbakes38@gmail.com', {
+      method: 'POST',
+      body: formData
+    });
+
+    if (response.ok) {
+      console.log('Payment confirmation sent to normanbakes38@gmail.com');
+      return true;
+    } else {
+      console.error('Failed to send payment confirmation');
+      return false;
+    }
+  } catch (error) {
+    console.error('Payment confirmation failed:', error);
     return false;
   }
 }
