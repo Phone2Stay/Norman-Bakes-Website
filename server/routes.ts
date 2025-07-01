@@ -12,14 +12,32 @@ if (process.env.STRIPE_SECRET_KEY) {
   stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 }
 
-// Email configuration
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER || 'your-email@gmail.com',
-    pass: process.env.EMAIL_PASS || 'your-app-password'
+// Free email solution - will log order details for now
+async function sendEmailNotification(orderData: any) {
+  try {
+    // For now, we'll log the order details - you can set up a free email service later
+    console.log('=== NEW CAKE ORDER RECEIVED ===');
+    console.log(`Customer: ${orderData.customerName}`);
+    console.log(`Email: ${orderData.customerEmail}`);
+    console.log(`Phone: ${orderData.customerPhone}`);
+    console.log(`Product: ${orderData.productType}`);
+    console.log(`Collection Date: ${orderData.collectionDate}`);
+    console.log(`Deposit: £${orderData.depositAmount}`);
+    console.log(`Order ID: ${orderData.id}`);
+    console.log('===============================');
+    
+    // Option 1: Use a free email service like Formspree
+    // You can create a free account at https://formspree.io and get your own form endpoint
+    
+    // Option 2: Use a webhook service that forwards to email
+    // We'll implement this approach
+    
+    return true; // Return true for now since we're logging
+  } catch (error) {
+    console.error('Email notification failed:', error);
+    return false;
   }
-});
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
