@@ -81,7 +81,7 @@ PAYMENT RECEIVED - DEPOSIT CONFIRMED
 Order Information:
 - Order ID: ${orderData.id}
 - Payment Date: ${new Date().toLocaleDateString('en-GB')}
-- Payment Amount: £${orderData.depositAmount}
+- Payment Amount: £${orderData.totalAmount}
 - Stripe Payment ID: ${paymentIntentId}
 
 Customer Details:
