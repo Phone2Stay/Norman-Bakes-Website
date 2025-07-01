@@ -30,7 +30,7 @@ async function sendPaymentConfirmation(orderData: any, paymentIntentId: string) 
     formData.append('Collection_Date', orderData.collectionDate);
     formData.append('Payment_Date', new Date().toLocaleDateString('en-GB'));
 
-    const response = await fetch('https://formspree.io/f/xpzgrkek', {
+    const response = await fetch('https://formspree.io/f/normanbakes38@gmail.com', {
       method: 'POST',
       body: formData,
       headers: {
@@ -71,7 +71,7 @@ async function sendEmailNotification(orderData: any) {
     formData.append('Payment_Status', orderData.paymentStatus);
     formData.append('Order_Date', new Date(orderData.createdAt).toLocaleDateString('en-GB'));
 
-    const response = await fetch('https://formspree.io/f/xpzgrkek', {
+    const response = await fetch('https://formspree.io/f/normanbakes38@gmail.com', {
       method: 'POST',
       body: formData,
       headers: {
@@ -177,52 +177,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Send confirmation email
-      const mailOptions = {
-        from: process.env.EMAIL_USER || 'your-email@gmail.com',
-        to: 'normanbakes38@gmail.com',
-        subject: `💰 DEPOSIT PAID - Order #${orderId} - ${updatedOrder.customerName}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <div style="background-color: #d97706; color: #000; padding: 20px; text-align: center;">
-              <h2 style="margin: 0; color: #000;">✅ DEPOSIT PAYMENT CONFIRMED</h2>
-            </div>
-            <div style="padding: 20px; background-color: #f0f8f0; border: 2px solid #28a745;">
-              <h3 style="color: #28a745; text-align: center; margin-top: 0;">Ready to start baking! 🎂</h3>
-              
-              <div style="background-color: #fff; padding: 15px; border-radius: 5px; margin: 15px 0;">
-                <h4 style="color: #000; margin-top: 0;">Order Information</h4>
-                <p><strong>Order ID:</strong> #${orderId}</p>
-                <p><strong>Product Type:</strong> ${updatedOrder.productType}</p>
-                <p><strong>Product Details:</strong> ${updatedOrder.productDetails}</p>
-                <p><strong>Collection Date:</strong> ${updatedOrder.collectionDate}</p>
-              </div>
-              
-              <div style="background-color: #fff; padding: 15px; border-radius: 5px; margin: 15px 0;">
-                <h4 style="color: #000; margin-top: 0;">Customer Details</h4>
-                <p><strong>Name:</strong> ${updatedOrder.customerName}</p>
-                <p><strong>Email:</strong> ${updatedOrder.customerEmail}</p>
-                <p><strong>Phone:</strong> ${updatedOrder.customerPhone}</p>
-              </div>
-              
-              <div style="background-color: #28a745; color: #fff; padding: 15px; text-align: center; border-radius: 5px;">
-                <h4 style="margin: 5px 0; color: #fff;">💳 Payment Confirmed: £${updatedOrder.depositAmount}</h4>
-                <p style="margin: 5px 0;">Stripe Payment ID: ${paymentIntentId}</p>
-              </div>
-              
-              <div style="background-color: #fff; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #d97706;">
-                <strong>Next Steps:</strong>
-                <ul style="margin: 10px 0;">
-                  <li>Contact customer to confirm final details</li>
-                  <li>Discuss any customisation requirements</li>
-                  <li>Arrange collection/delivery logistics</li>
-                  <li>Calculate and collect remaining balance</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        `
-      };
-
       // Send payment confirmation notification
       try {
         await sendPaymentConfirmation(updatedOrder, paymentIntentId);

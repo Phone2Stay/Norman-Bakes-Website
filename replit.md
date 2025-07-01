@@ -110,6 +110,9 @@ Required environment variables:
   - Other items: Tray bakes (£30), Bento cakes (£40), Brownies (£22)
 - June 29, 2025: Added filling options display and cupcake pricing guidance
 - June 29, 2025: Simplified order form to use product type dropdown with text input for details, fixed £10 deposit requirement
+- July 1, 2025: Implemented permanent free email notification system using Formspree
+- July 1, 2025: Activated Stripe payment processing with live API keys - system fully operational
+- July 1, 2025: Created automated email notifications for both new orders and payment confirmations
 
 ## User Preferences
 
