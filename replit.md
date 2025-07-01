@@ -113,6 +113,13 @@ Required environment variables:
 - July 1, 2025: Implemented permanent free email notification system using Formspree
 - July 1, 2025: Activated Stripe payment processing with live API keys - system fully operational
 - July 1, 2025: Created automated email notifications for both new orders and payment confirmations
+- July 1, 2025: Added cupcake box of 24 (£48) to product options
+- July 1, 2025: Extended extras dropdown with cupcake toppers (personalised £3-£12, highly decorated £6-£24)
+- July 1, 2025: Added image upload capability for customer reference photos in orders
+- July 1, 2025: Enhanced gallery with 4 new cake images and social media links to Facebook/Instagram
+- July 1, 2025: Created comprehensive certifications section displaying hygiene rating and food safety certificates
+- July 1, 2025: Updated product descriptions to mention gluten-free options available
+- July 1, 2025: Removed all £10 deposit references from pricing sections
 
 ## User Preferences
 
