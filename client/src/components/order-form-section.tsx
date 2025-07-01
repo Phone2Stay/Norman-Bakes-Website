@@ -24,6 +24,7 @@ const orderSchema = z.object({
   productDetails: z.string().min(1, "Product details are required"),
   specialRequirements: z.string().optional(),
   extras: z.string().optional(),
+  referenceImage: z.any().optional(),
 });
 
 type OrderFormData = z.infer<typeof orderSchema>;
@@ -456,7 +457,7 @@ export default function OrderFormSection() {
                       <FormLabel>Product Details</FormLabel>
                       <FormControl>
                         <Textarea 
-                          placeholder="Please specify: size, flavour, theme, colours, text, quantity, etc. For example: '6 inch vanilla sponge with chocolate buttercream, pink roses theme, Happy Birthday Sarah'"
+                          placeholder="Please specify: size, flavour, theme, colours, text, quantity, etc. For example: '6 inch vanilla sponge with chocolate buttercream, pink roses theme, Happy Birthday Sarah'. We also offer gluten-free options - please mention if required."
                           className="min-h-[100px]"
                           {...field} 
                         />
@@ -474,10 +475,35 @@ export default function OrderFormSection() {
                       <FormLabel>Special Requirements (Optional)</FormLabel>
                       <FormControl>
                         <Textarea 
-                          placeholder="Any allergies, dietary requirements, or special requests"
+                          placeholder="Any allergies, dietary requirements, or special requests. Please see our allergen information page for full details."
                           {...field} 
                         />
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="referenceImage"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Reference Image (Optional)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            field.onChange(file);
+                          }}
+                          className="cursor-pointer"
+                        />
+                      </FormControl>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Upload a photo of a cake design you like for reference (optional)
+                      </p>
                       <FormMessage />
                     </FormItem>
                   )}

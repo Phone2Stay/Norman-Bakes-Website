@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/home";
 import ReturnPolicy from "@/pages/return-policy";
 import TermsConditions from "@/pages/terms-conditions";
+import AllergenInformation from "@/pages/allergen-information";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -14,6 +15,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/return-policy" component={ReturnPolicy} />
       <Route path="/terms-conditions" component={TermsConditions} />
+      <Route path="/allergen-information" component={AllergenInformation} />
       <Route component={NotFound} />
     </Switch>
   );
