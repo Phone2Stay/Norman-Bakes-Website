@@ -45,10 +45,7 @@ const galleryImages = [
     src: additionalCake2Image,
     alt: "Beautiful collection of decorated cupcakes with blue buttercream roses and elegant designs"
   },
-  {
-    src: additionalCake1Image,
-    alt: "Elegant celebration cake featuring Norman Bakes' signature design style"
-  },
+
   {
     src: chefWithCakeImage,
     alt: "Claire Norman, owner of Norman Bakes, proudly presenting a beautiful heart-shaped celebration cake"
