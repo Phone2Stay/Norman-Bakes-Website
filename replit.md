@@ -121,6 +121,7 @@ Required environment variables:
 - July 1, 2025: Updated product descriptions to mention gluten-free options available
 - July 1, 2025: Removed all £10 deposit references from pricing sections
 - July 2, 2025: Increased maximum orders per date from 2 to 5 orders
+- July 2, 2025: Reduced maximum orders per date from 5 to 4 orders
 - July 2, 2025: Updated gallery with chef portrait photo and corrected image descriptions
 - July 2, 2025: Enhanced certifications section with new Level 2 Food Hygiene certificate
 

@@ -141,7 +141,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const orderCount = await storage.getOrderCountForDate(date);
-      const available = orderCount < 5;
+      const available = orderCount < 4;
       
       res.json({ available, currentOrders: orderCount });
     } catch (error: any) {
