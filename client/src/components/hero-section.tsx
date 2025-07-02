@@ -24,9 +24,12 @@ export default function HeroSection() {
             className="mx-auto h-48 md:h-64 w-auto"
           />
         </div>
-        <p className="text-lg md:text-xl mb-12 max-w-2xl mx-auto">
+        <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
           Bespoke celebration cakes crafted with love in Barry, Vale of Glamorgan. 
           From elegant wedding cakes to delightful birthday treats, every creation is a masterpiece.
+        </p>
+        <p className="text-gold font-semibold text-lg mb-12">
+          Collection Only: 1 Dale Court, Ramsey Road, Barry, CF62 9DJ
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button 

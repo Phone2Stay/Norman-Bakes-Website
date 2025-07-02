@@ -337,8 +337,11 @@ export default function OrderFormSection() {
         <Card className="max-w-2xl mx-auto">
           <CardHeader>
             <CardTitle className="text-center text-gold">Place Your Order</CardTitle>
+            <p className="text-center text-sm text-gray-600 mb-2">
+              Collection only from: <strong>1 Dale Court, Ramsey Road, Barry, CF62 9DJ</strong>
+            </p>
             <p className="text-center text-sm text-gray-600">
-              £10 deposit required - we'll contact you to finalise details and arrange collection
+              Full payment required - we'll contact you to arrange collection time
             </p>
           </CardHeader>
           <CardContent>

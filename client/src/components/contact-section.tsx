@@ -22,9 +22,14 @@ export default function ContactSection() {
                 <Mail className="text-gold mr-4" size={20} />
                 <span>normanbakes38@gmail.com</span>
               </div>
-              <div className="flex items-center">
-                <MapPin className="text-gold mr-4" size={20} />
-                <span>Barry, Vale of Glamorgan, Wales</span>
+              <div className="flex items-start">
+                <MapPin className="text-gold mr-4 mt-1" size={20} />
+                <div>
+                  <div className="font-semibold text-gold">Collection Only</div>
+                  <div>1 Dale Court, Ramsey Road</div>
+                  <div>Barry, CF62 9DJ</div>
+                  <div>Vale of Glamorgan, Wales</div>
+                </div>
               </div>
               <div className="flex items-center">
                 <Clock className="text-gold mr-4" size={20} />
