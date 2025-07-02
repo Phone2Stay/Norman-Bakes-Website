@@ -43,7 +43,7 @@ const galleryImages = [
   },
   {
     src: additionalCake2Image,
-    alt: "Stunning custom cake creation demonstrating Norman Bakes' exceptional decorating skills"
+    alt: "Beautiful collection of decorated cupcakes with blue buttercream roses and elegant designs"
   },
   {
     src: additionalCake1Image,
