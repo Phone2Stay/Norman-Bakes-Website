@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Award } from "lucide-react";
 
-import hygieneCertificateImage from "@assets/hygiene_certificate.jpeg";
-import hygieneRatingImage from "@assets/hygiene_rating.jpeg";
+import hygieneCertificateImage from "@assets/food_hygiene_certificate_new.png";
+import hygieneRatingImage from "@assets/additional_cake_3.jpeg";
 
 export default function CertificationsSection() {
   return (

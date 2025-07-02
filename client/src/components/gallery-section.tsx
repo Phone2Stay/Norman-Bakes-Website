@@ -10,7 +10,7 @@ import heartCakesImage from "@assets/image_1751231200383.png";
 import newCupcakesImage from "@assets/new_cupcakes_2025.jpeg";
 import additionalCake1Image from "@assets/additional_cake_1.jpeg";
 import additionalCake2Image from "@assets/additional_cake_2.jpeg";
-import additionalCake3Image from "@assets/additional_cake_3.jpeg";
+import chefWithCakeImage from "@assets/chef_with_cake_new.png";
 
 const galleryImages = [
   {
@@ -42,16 +42,16 @@ const galleryImages = [
     alt: "Beautiful collection of freshly decorated cupcakes showcasing Norman Bakes' artistry"
   },
   {
-    src: additionalCake1Image,
+    src: additionalCake2Image,
     alt: "Stunning custom cake creation demonstrating Norman Bakes' exceptional decorating skills"
   },
   {
-    src: additionalCake2Image,
+    src: additionalCake1Image,
     alt: "Elegant celebration cake featuring Norman Bakes' signature design style"
   },
   {
-    src: additionalCake3Image,
-    alt: "Premium cake design showcasing Norman Bakes' attention to detail and craftsmanship"
+    src: chefWithCakeImage,
+    alt: "Claire Norman, owner of Norman Bakes, proudly presenting a beautiful heart-shaped celebration cake"
   }
 ];
 
