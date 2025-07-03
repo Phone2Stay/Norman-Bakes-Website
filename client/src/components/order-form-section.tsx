@@ -442,20 +442,52 @@ export default function OrderFormSection() {
                   control={form.control}
                   name="collectionDate"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="flex flex-col">
                       <FormLabel>Required Collection Date</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="date" 
-                          min={new Date().toISOString().split('T')[0]}
-                          {...field}
-                          style={{
-                            colorScheme: 'light'
-                          }}
-                        />
-                      </FormControl>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-full pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(new Date(field.value), "PPP")
+                              ) : (
+                                <span>Pick a collection date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value ? new Date(field.value) : undefined}
+                            onSelect={(date) => {
+                              if (date) {
+                                field.onChange(date.toISOString().split('T')[0]);
+                              }
+                            }}
+                            disabled={(date) => {
+                              // Disable past dates
+                              const today = new Date();
+                              today.setHours(0, 0, 0, 0);
+                              if (date < today) return true;
+                              
+                              // Disable closure periods using date string
+                              const dateString = date.toISOString().split('T')[0];
+                              return isClosurePeriod(dateString);
+                            }}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
                       <p className="text-sm text-amber-600 mt-1">
-                        <strong>Blocked periods:</strong> Jul 12-20 & 25, Aug 8-20, Sep 17-19, Oct 27-31, Nov 21-23, Dec 19-31 (2025)
+                        Blocked dates are grayed out and cannot be selected. Closure periods: Jul 12-20 & 25, Aug 8-20, Sep 17-19, Oct 27-31, Nov 21-23, Dec 19-31 (2025)
                       </p>
                       <FormMessage />
                     </FormItem>
