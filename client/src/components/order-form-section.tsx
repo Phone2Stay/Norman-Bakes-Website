@@ -15,11 +15,24 @@ import { apiRequest } from "@/lib/queryClient";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || '');
 
+// Helper function to check if date is in Christmas closure period
+const isChristmasClosurePeriod = (dateString: string): boolean => {
+  const date = new Date(dateString);
+  const month = date.getMonth(); // 0-indexed, so December is 11
+  const day = date.getDate();
+  
+  // Block December 26th through December 31st
+  return month === 11 && day >= 26 && day <= 31;
+};
+
 const orderSchema = z.object({
   customerName: z.string().min(1, "Name is required"),
   customerEmail: z.string().email("Valid email is required"),
   customerPhone: z.string().min(1, "Phone number is required"),
-  collectionDate: z.string().min(1, "Collection date is required"),
+  collectionDate: z.string().min(1, "Collection date is required").refine(
+    (date) => !isChristmasClosurePeriod(date),
+    "We are closed from December 26th - 31st. Please select a different date."
+  ),
   productType: z.string().min(1, "Product type is required"),
   productDetails: z.string().min(1, "Product details are required"),
   specialRequirements: z.string().optional(),
@@ -398,8 +411,15 @@ export default function OrderFormSection() {
                     <FormItem>
                       <FormLabel>Required Collection Date</FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} />
+                        <Input 
+                          type="date" 
+                          min={new Date().toISOString().split('T')[0]} // Today's date
+                          {...field} 
+                        />
                       </FormControl>
+                      <p className="text-sm text-amber-600 mt-1">
+                        Please note: We are closed from December 26th - 31st each year
+                      </p>
                       <FormMessage />
                     </FormItem>
                   )}
