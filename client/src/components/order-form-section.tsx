@@ -10,8 +10,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || '');
 
@@ -442,12 +447,15 @@ export default function OrderFormSection() {
                       <FormControl>
                         <Input 
                           type="date" 
-                          min={new Date().toISOString().split('T')[0]} // Today's date
-                          {...field} 
+                          min={new Date().toISOString().split('T')[0]}
+                          {...field}
+                          style={{
+                            colorScheme: 'light'
+                          }}
                         />
                       </FormControl>
                       <p className="text-sm text-amber-600 mt-1">
-                        Please note: We have scheduled closure periods. If a date appears unavailable, please select an alternative date.
+                        <strong>Blocked periods:</strong> Jul 12-20 & 25, Aug 8-20, Sep 17-19, Oct 27-31, Nov 21-23, Dec 19-31 (2025)
                       </p>
                       <FormMessage />
                     </FormItem>
