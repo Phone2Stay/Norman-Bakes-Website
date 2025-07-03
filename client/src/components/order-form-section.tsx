@@ -20,19 +20,19 @@ import { cn } from "@/lib/utils";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || '');
 
-// Helper function to check if date is in closure period
-const isClosurePeriod = (dateString: string): boolean => {
+// Helper function to check if date is fully booked
+const isFullyBooked = (dateString: string): boolean => {
   const date = new Date(dateString);
   const year = date.getFullYear();
   const month = date.getMonth(); // 0-indexed
   const day = date.getDate();
   
-  // Christmas closure (all years): December 26th - 31st
-  if (month === 11 && day >= 26 && day <= 31) {
+  // Only allow 2025 bookings
+  if (year !== 2025) {
     return true;
   }
   
-  // 2025 specific closure dates
+  // 2025 fully booked dates
   if (year === 2025) {
     // July 12th - 20th
     if (month === 6 && day >= 12 && day <= 20) return true;
@@ -52,7 +52,7 @@ const isClosurePeriod = (dateString: string): boolean => {
     // November 21st - 23rd
     if (month === 10 && day >= 21 && day <= 23) return true;
     
-    // December 19th - 31st (extends Christmas closure for 2025)
+    // December 19th - 31st
     if (month === 11 && day >= 19 && day <= 31) return true;
   }
   
@@ -64,8 +64,8 @@ const orderSchema = z.object({
   customerEmail: z.string().email("Valid email is required"),
   customerPhone: z.string().min(1, "Phone number is required"),
   collectionDate: z.string().min(1, "Collection date is required").refine(
-    (date) => !isClosurePeriod(date),
-    "We are closed on the selected date. Please choose a different date."
+    (date) => !isFullyBooked(date),
+    "This date is fully booked. Please choose a different date."
   ),
   productType: z.string().min(1, "Product type is required"),
   productDetails: z.string().min(1, "Product details are required"),
@@ -478,16 +478,16 @@ export default function OrderFormSection() {
                               today.setHours(0, 0, 0, 0);
                               if (date < today) return true;
                               
-                              // Disable closure periods using date string
+                              // Disable fully booked dates using date string
                               const dateString = date.toISOString().split('T')[0];
-                              return isClosurePeriod(dateString);
+                              return isFullyBooked(dateString);
                             }}
                             initialFocus
                           />
                         </PopoverContent>
                       </Popover>
                       <p className="text-sm text-amber-600 mt-1">
-                        Blocked dates are grayed out and cannot be selected. Closure periods: Jul 12-20 & 25, Aug 8-20, Sep 17-19, Oct 27-31, Nov 21-23, Dec 19-31 (2025)
+                        Fully booked dates are grayed out and cannot be selected. Available for 2025 only. Booked periods: Jul 12-20 & 25, Aug 8-20, Sep 17-19, Oct 27-31, Nov 21-23, Dec 19-31
                       </p>
                       <FormMessage />
                     </FormItem>
