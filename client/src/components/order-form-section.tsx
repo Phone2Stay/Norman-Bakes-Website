@@ -15,14 +15,43 @@ import { apiRequest } from "@/lib/queryClient";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || '');
 
-// Helper function to check if date is in Christmas closure period
-const isChristmasClosurePeriod = (dateString: string): boolean => {
+// Helper function to check if date is in closure period
+const isClosurePeriod = (dateString: string): boolean => {
   const date = new Date(dateString);
-  const month = date.getMonth(); // 0-indexed, so December is 11
+  const year = date.getFullYear();
+  const month = date.getMonth(); // 0-indexed
   const day = date.getDate();
   
-  // Block December 26th through December 31st
-  return month === 11 && day >= 26 && day <= 31;
+  // Christmas closure (all years): December 26th - 31st
+  if (month === 11 && day >= 26 && day <= 31) {
+    return true;
+  }
+  
+  // 2025 specific closure dates
+  if (year === 2025) {
+    // July 12th - 20th
+    if (month === 6 && day >= 12 && day <= 20) return true;
+    
+    // July 25th
+    if (month === 6 && day === 25) return true;
+    
+    // August 8th - 20th  
+    if (month === 7 && day >= 8 && day <= 20) return true;
+    
+    // September 17th - 19th
+    if (month === 8 && day >= 17 && day <= 19) return true;
+    
+    // October 27th - 31st
+    if (month === 9 && day >= 27 && day <= 31) return true;
+    
+    // November 21st - 23rd
+    if (month === 10 && day >= 21 && day <= 23) return true;
+    
+    // December 19th - 31st (extends Christmas closure for 2025)
+    if (month === 11 && day >= 19 && day <= 31) return true;
+  }
+  
+  return false;
 };
 
 const orderSchema = z.object({
@@ -30,8 +59,8 @@ const orderSchema = z.object({
   customerEmail: z.string().email("Valid email is required"),
   customerPhone: z.string().min(1, "Phone number is required"),
   collectionDate: z.string().min(1, "Collection date is required").refine(
-    (date) => !isChristmasClosurePeriod(date),
-    "We are closed from December 26th - 31st. Please select a different date."
+    (date) => !isClosurePeriod(date),
+    "We are closed on the selected date. Please choose a different date."
   ),
   productType: z.string().min(1, "Product type is required"),
   productDetails: z.string().min(1, "Product details are required"),
@@ -418,7 +447,7 @@ export default function OrderFormSection() {
                         />
                       </FormControl>
                       <p className="text-sm text-amber-600 mt-1">
-                        Please note: We are closed from December 26th - 31st each year
+                        Please note: We have scheduled closure periods. If a date appears unavailable, please select an alternative date.
                       </p>
                       <FormMessage />
                     </FormItem>
