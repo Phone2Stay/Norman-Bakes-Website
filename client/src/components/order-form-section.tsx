@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -101,6 +101,59 @@ const extrasOptions = [
   { value: "decorated-toppers-12", label: "Highly decorated cupcake toppers (box of 12)", price: 12 },
   { value: "decorated-toppers-24", label: "Highly decorated cupcake toppers (box of 24)", price: 24 },
 ];
+
+function StripePaymentForm({ orderId, amount, onSuccess }: { orderId: number, amount: number, onSuccess: () => void }) {
+  const [clientSecret, setClientSecret] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    // Create payment intent when component mounts
+    const createPaymentIntent = async () => {
+      try {
+        const response = await apiRequest("POST", "/api/create-payment-intent", {
+          amount: amount,
+          orderId: orderId
+        });
+        const data = await response.json();
+        setClientSecret(data.clientSecret);
+      } catch (error) {
+        toast({
+          title: "Payment Error",
+          description: "Unable to initialize payment. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    createPaymentIntent();
+  }, [amount, orderId]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <div className="animate-spin w-8 h-8 border-4 border-gold border-t-transparent rounded-full"></div>
+        <span className="ml-2">Setting up payment...</span>
+      </div>
+    );
+  }
+
+  if (!clientSecret) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-red-600">Payment initialization failed. Please refresh and try again.</p>
+      </div>
+    );
+  }
+
+  return (
+    <Elements stripe={stripePromise} options={{ clientSecret }}>
+      <PaymentForm orderId={orderId} amount={amount} onSuccess={onSuccess} />
+    </Elements>
+  );
+}
 
 function PaymentForm({ orderId, amount, onSuccess }: { orderId: number, amount: number, onSuccess: () => void }) {
   const stripe = useStripe();
@@ -262,13 +315,7 @@ export default function OrderFormSection() {
               </p>
             </CardHeader>
             <CardContent>
-              <Elements stripe={stripePromise} options={{
-                mode: 'payment',
-                amount: totalAmount * 100,
-                currency: 'gbp',
-              }}>
-                <PaymentForm orderId={orderId} amount={totalAmount} onSuccess={handlePaymentSuccess} />
-              </Elements>
+              <StripePaymentForm orderId={orderId} amount={totalAmount} onSuccess={handlePaymentSuccess} />
             </CardContent>
           </Card>
         </div>
