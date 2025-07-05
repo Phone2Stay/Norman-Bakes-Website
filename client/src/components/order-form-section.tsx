@@ -111,6 +111,7 @@ function StripePaymentForm({ orderId, amount, onSuccess }: { orderId: number, am
     // Create payment intent using Netlify Functions
     const createPaymentIntent = async () => {
       try {
+        console.log('Creating payment intent for amount:', amount, 'orderId:', orderId);
         const response = await fetch('/.netlify/functions/create-payment-intent', {
           method: 'POST',
           headers: {
@@ -123,10 +124,13 @@ function StripePaymentForm({ orderId, amount, onSuccess }: { orderId: number, am
         });
         
         if (!response.ok) {
-          throw new Error('Payment setup failed');
+          const errorText = await response.text();
+          console.error('Payment setup failed:', response.status, errorText);
+          throw new Error(`Payment setup failed: ${response.status}`);
         }
         
         const data = await response.json();
+        console.log('Payment intent created successfully:', data);
         setClientSecret(data.clientSecret);
       } catch (error) {
         console.error('Payment intent creation failed:', error);
@@ -166,6 +170,9 @@ function StripePaymentForm({ orderId, amount, onSuccess }: { orderId: number, am
     );
   }
 
+  console.log('Stripe Promise:', stripePromise);
+  console.log('Client Secret:', clientSecret);
+
   return (
     <Elements stripe={stripePromise} options={{ clientSecret }}>
       <PaymentForm orderId={orderId} amount={amount} onSuccess={onSuccess} />
@@ -179,10 +186,13 @@ function PaymentForm({ orderId, amount, onSuccess }: { orderId: number, amount: 
   const { toast } = useToast();
   const [processing, setProcessing] = useState(false);
 
+  console.log('PaymentForm rendered - stripe:', !!stripe, 'elements:', !!elements);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!stripe || !elements) {
+      console.log('Stripe or elements not ready');
       return;
     }
 
@@ -197,12 +207,14 @@ function PaymentForm({ orderId, amount, onSuccess }: { orderId: number, amount: 
     });
 
     if (error) {
+      console.error('Payment error:', error);
       toast({
         title: "Payment Failed",
         description: error.message,
         variant: "destructive",
       });
     } else {
+      console.log('Payment successful');
       toast({
         title: "Payment Successful",
         description: "Thank you! Your deposit has been processed.",
@@ -213,17 +225,30 @@ function PaymentForm({ orderId, amount, onSuccess }: { orderId: number, amount: 
     setProcessing(false);
   };
 
+  if (!stripe || !elements) {
+    return (
+      <div className="text-center py-4">
+        <div className="animate-spin w-6 h-6 border-2 border-gold border-t-transparent rounded-full mx-auto"></div>
+        <p className="text-sm text-gray-600 mt-2">Loading payment form...</p>
+      </div>
+    );
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <PaymentElement />
+    <div className="space-y-4">
+      <PaymentElement 
+        options={{
+          layout: 'tabs'
+        }}
+      />
       <Button 
-        type="submit" 
+        onClick={handleSubmit}
         disabled={!stripe || processing}
         className="w-full bg-gold hover:bg-gold-dark text-black font-semibold"
       >
         {processing ? "Processing..." : `Pay £${amount}`}
       </Button>
-    </form>
+    </div>
   );
 }
 
