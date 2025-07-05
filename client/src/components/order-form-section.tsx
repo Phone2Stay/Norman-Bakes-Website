@@ -103,55 +103,37 @@ const extrasOptions = [
 ];
 
 function StripePaymentForm({ orderId, amount, onSuccess }: { orderId: number, amount: number, onSuccess: () => void }) {
-  const [clientSecret, setClientSecret] = useState<string>("");
-  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  useEffect(() => {
-    // Create payment intent when component mounts
-    const createPaymentIntent = async () => {
-      try {
-        const response = await apiRequest("POST", "/api/create-payment-intent", {
-          amount: amount,
-          orderId: orderId
-        });
-        const data = await response.json();
-        setClientSecret(data.clientSecret);
-      } catch (error) {
-        toast({
-          title: "Payment Error",
-          description: "Unable to initialize payment. Please try again.",
-          variant: "destructive",
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    createPaymentIntent();
-  }, [amount, orderId]);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <div className="animate-spin w-8 h-8 border-4 border-gold border-t-transparent rounded-full"></div>
-        <span className="ml-2">Setting up payment...</span>
-      </div>
-    );
-  }
-
-  if (!clientSecret) {
-    return (
-      <div className="text-center py-8">
-        <p className="text-red-600">Payment initialization failed. Please refresh and try again.</p>
-      </div>
-    );
-  }
+  // For static site deployment, show payment instructions instead of Stripe form
+  const handlePaymentInstructions = () => {
+    toast({
+      title: "Payment Instructions",
+      description: "We'll contact you directly to arrange secure payment for your order.",
+    });
+    onSuccess();
+  };
 
   return (
-    <Elements stripe={stripePromise} options={{ clientSecret }}>
-      <PaymentForm orderId={orderId} amount={amount} onSuccess={onSuccess} />
-    </Elements>
+    <div className="space-y-4">
+      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+        <h3 className="font-semibold text-amber-800 mb-2">Payment Process</h3>
+        <p className="text-amber-700 text-sm mb-4">
+          We'll contact you within 24 hours to arrange secure payment for your order. 
+          You can pay by bank transfer, card over the phone, or cash on collection.
+        </p>
+        <div className="text-sm text-amber-600">
+          <p><strong>Order Total:</strong> £{amount}</p>
+          <p><strong>Order ID:</strong> {orderId}</p>
+        </div>
+      </div>
+      <Button 
+        onClick={handlePaymentInstructions}
+        className="w-full bg-gold hover:bg-gold-dark text-black font-semibold"
+      >
+        Confirm Order - We'll Contact You for Payment
+      </Button>
+    </div>
   );
 }
 
@@ -253,31 +235,39 @@ export default function OrderFormSection() {
 
   const onSubmit = async (data: OrderFormData) => {
     try {
-      // Check date availability first
-      const dateAvailable = await checkDateAvailability(data.collectionDate);
-      if (!dateAvailable) {
-        toast({
-          title: "Date Unavailable",
-          description: "This date is fully booked. Please select another date.",
-          variant: "destructive",
-        });
-        return;
-      }
-
       const total = calculateTotal();
-      const response = await apiRequest("POST", "/api/orders", {
-        ...data,
-        totalAmount: total
-      });
       
-      const order = await response.json();
-      setOrderId(order.id);
+      // For static site deployment, we'll send order via FormSubmit.co
+      // and then proceed directly to payment
+      const formData = new FormData();
+      formData.append('customerName', data.customerName);
+      formData.append('customerEmail', data.customerEmail);
+      formData.append('customerPhone', data.customerPhone);
+      formData.append('collectionDate', data.collectionDate);
+      formData.append('productType', data.productType);
+      formData.append('productDetails', data.productDetails);
+      formData.append('specialRequirements', data.specialRequirements || 'None');
+      formData.append('extras', data.extras || 'None');
+      formData.append('totalAmount', total.toString());
+      formData.append('_subject', `New Cake Order - ${data.productType}`);
+      formData.append('_captcha', 'false');
+      formData.append('_template', 'table');
+      
+      // Send order notification
+      await fetch('https://formsubmit.co/normanbakes38@gmail.com', {
+        method: 'POST',
+        body: formData
+      });
+
+      // Generate a pseudo order ID for payment tracking
+      const orderId = Date.now();
+      setOrderId(orderId);
       setTotalAmount(total);
       setShowPayment(true);
       
       const isDeposit = selectedProduct?.isDeposit;
       toast({
-        title: "Order Created",
+        title: "Order Submitted",
         description: isDeposit 
           ? "Please complete your £20 deposit payment. We'll contact you to discuss the full cake details."
           : `Please complete your £${total} payment.`,
@@ -285,7 +275,7 @@ export default function OrderFormSection() {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to create order. Please try again.",
+        description: "Failed to submit order. Please try again.",
         variant: "destructive",
       });
     }
