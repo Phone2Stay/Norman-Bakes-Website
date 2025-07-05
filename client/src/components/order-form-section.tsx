@@ -103,37 +103,73 @@ const extrasOptions = [
 ];
 
 function StripePaymentForm({ orderId, amount, onSuccess }: { orderId: number, amount: number, onSuccess: () => void }) {
+  const [clientSecret, setClientSecret] = useState<string>("");
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  // For static site deployment, show payment instructions instead of Stripe form
-  const handlePaymentInstructions = () => {
-    toast({
-      title: "Payment Instructions",
-      description: "We'll contact you directly to arrange secure payment for your order.",
-    });
-    onSuccess();
-  };
+  useEffect(() => {
+    // Create payment intent using Netlify Functions
+    const createPaymentIntent = async () => {
+      try {
+        const response = await fetch('/.netlify/functions/create-payment-intent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            amount: amount,
+            orderId: orderId
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Payment setup failed');
+        }
+        
+        const data = await response.json();
+        setClientSecret(data.clientSecret);
+      } catch (error) {
+        console.error('Payment intent creation failed:', error);
+        toast({
+          title: "Payment Error",
+          description: "Unable to initialize payment. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    createPaymentIntent();
+  }, [amount, orderId, toast]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <div className="animate-spin w-8 h-8 border-4 border-gold border-t-transparent rounded-full"></div>
+        <span className="ml-2">Setting up payment...</span>
+      </div>
+    );
+  }
+
+  if (!clientSecret) {
+    return (
+      <div className="text-center py-8 space-y-4">
+        <p className="text-red-600">Payment initialization failed.</p>
+        <Button 
+          onClick={() => window.location.reload()}
+          variant="outline"
+        >
+          Try Again
+        </Button>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-4">
-      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-        <h3 className="font-semibold text-amber-800 mb-2">Payment Process</h3>
-        <p className="text-amber-700 text-sm mb-4">
-          We'll contact you within 24 hours to arrange secure payment for your order. 
-          You can pay by bank transfer, card over the phone, or cash on collection.
-        </p>
-        <div className="text-sm text-amber-600">
-          <p><strong>Order Total:</strong> £{amount}</p>
-          <p><strong>Order ID:</strong> {orderId}</p>
-        </div>
-      </div>
-      <Button 
-        onClick={handlePaymentInstructions}
-        className="w-full bg-gold hover:bg-gold-dark text-black font-semibold"
-      >
-        Confirm Order - We'll Contact You for Payment
-      </Button>
-    </div>
+    <Elements stripe={stripePromise} options={{ clientSecret }}>
+      <PaymentForm orderId={orderId} amount={amount} onSuccess={onSuccess} />
+    </Elements>
   );
 }
 
