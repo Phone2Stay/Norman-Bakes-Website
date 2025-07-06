@@ -567,7 +567,12 @@ export default function OrderFormSection() {
                             selected={field.value ? new Date(field.value) : undefined}
                             onSelect={(date) => {
                               if (date) {
-                                field.onChange(date.toISOString().split('T')[0]);
+                                // Format date as YYYY-MM-DD in local timezone
+                                const year = date.getFullYear();
+                                const month = String(date.getMonth() + 1).padStart(2, '0');
+                                const day = String(date.getDate()).padStart(2, '0');
+                                const localDateString = `${year}-${month}-${day}`;
+                                field.onChange(localDateString);
                               }
                             }}
                             disabled={(date) => {
@@ -576,8 +581,11 @@ export default function OrderFormSection() {
                               today.setHours(0, 0, 0, 0);
                               if (date < today) return true;
                               
-                              // Disable fully booked dates using date string
-                              const dateString = date.toISOString().split('T')[0];
+                              // Disable fully booked dates using consistent date formatting
+                              const year = date.getFullYear();
+                              const month = String(date.getMonth() + 1).padStart(2, '0');
+                              const day = String(date.getDate()).padStart(2, '0');
+                              const dateString = `${year}-${month}-${day}`;
                               return isFullyBooked(dateString);
                             }}
                             initialFocus
