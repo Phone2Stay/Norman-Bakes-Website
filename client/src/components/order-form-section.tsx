@@ -40,20 +40,21 @@ const isFullyBooked = (dateString: string): boolean => {
     // July 25th
     if (month === 6 && day === 25) return true;
     
-    // August 8th - 20th  
-    if (month === 7 && day >= 8 && day <= 20) return true;
+    // August - entire month blocked
+    if (month === 7) return true;
     
-    // September 17th - 19th
-    if (month === 8 && day >= 17 && day <= 19) return true;
+    // September specific dates: 6th, 7th, 17th, 18th, 19th, 20th, 25th, 26th, 27th, 28th, 29th, 30th
+    if (month === 8 && [6, 7, 17, 18, 19, 20, 25, 26, 27, 28, 29, 30].includes(day)) return true;
     
-    // October 27th - 31st
-    if (month === 9 && day >= 27 && day <= 31) return true;
+    // October specific dates: 11th, 12th, 21st, 23rd, 27th, 28th, 29th, 30th, 31st
+    if (month === 9 && [11, 12, 21, 23, 27, 28, 29, 30, 31].includes(day)) return true;
     
-    // November 21st - 23rd
-    if (month === 10 && day >= 21 && day <= 23) return true;
+    // November specific dates: 15th, 16th, 21st, 22nd, 23rd, 28th, 29th
+    if (month === 10 && [15, 16, 21, 22, 23, 28, 29].includes(day)) return true;
     
-    // December 19th - 31st
-    if (month === 11 && day >= 19 && day <= 31) return true;
+    // December 15th - 28th and 31st
+    if (month === 11 && (day >= 15 && day <= 28)) return true;
+    if (month === 11 && day === 31) return true;
   }
   
   return false;
@@ -593,7 +594,7 @@ export default function OrderFormSection() {
                         </PopoverContent>
                       </Popover>
                       <p className="text-sm text-amber-600 mt-1">
-                        Fully booked dates are grayed out and cannot be selected. Available for 2025 only. Booked periods: Jul 12-20 & 25, Aug 8-20, Sep 17-19, Oct 27-31, Nov 21-23, Dec 19-31
+                        Fully booked dates are grayed out and cannot be selected. Available for 2025 only. Blocked periods: Jul 12-20 & 25, entire August, various September/October/November dates, Dec 15-28 & 31
                       </p>
                       <FormMessage />
                     </FormItem>
