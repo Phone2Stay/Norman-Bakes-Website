@@ -126,6 +126,7 @@ Required environment variables:
 - July 2, 2025: Enhanced certifications section with new Level 2 Food Hygiene certificate
 - January 23, 2025: Reduced maximum orders per date from 4 to 2 orders
 - January 23, 2025: Extended blocked dates - entire August, additional September/October/November dates, December 15-28 & 31
+- September 18, 2025: Extended blocked dates - entire September and October months, additional November dates (1st, 2nd, 4th, 8th, 9th, 14th, 20th, 30th), and December 4th
 
 ## User Preferences
 

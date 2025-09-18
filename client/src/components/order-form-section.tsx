@@ -43,16 +43,17 @@ const isFullyBooked = (dateString: string): boolean => {
     // August - entire month blocked
     if (month === 7) return true;
     
-    // September specific dates: 6th, 7th, 17th, 18th, 19th, 20th, 25th, 26th, 27th, 28th, 29th, 30th
-    if (month === 8 && [6, 7, 17, 18, 19, 20, 25, 26, 27, 28, 29, 30].includes(day)) return true;
+    // September - entire month blocked
+    if (month === 8) return true;
     
-    // October specific dates: 11th, 12th, 21st, 23rd, 27th, 28th, 29th, 30th, 31st
-    if (month === 9 && [11, 12, 21, 23, 27, 28, 29, 30, 31].includes(day)) return true;
+    // October - entire month blocked
+    if (month === 9) return true;
     
-    // November specific dates: 15th, 16th, 21st, 22nd, 23rd, 28th, 29th
-    if (month === 10 && [15, 16, 21, 22, 23, 28, 29].includes(day)) return true;
+    // November specific dates: 1st, 2nd, 4th, 8th, 9th, 14th, 15th, 16th, 20th, 21st, 22nd, 23rd, 28th, 29th, 30th
+    if (month === 10 && [1, 2, 4, 8, 9, 14, 15, 16, 20, 21, 22, 23, 28, 29, 30].includes(day)) return true;
     
-    // December 15th - 28th and 31st
+    // December 4th, 15th - 28th and 31st
+    if (month === 11 && day === 4) return true;
     if (month === 11 && (day >= 15 && day <= 28)) return true;
     if (month === 11 && day === 31) return true;
   }
