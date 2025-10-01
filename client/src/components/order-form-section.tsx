@@ -27,8 +27,8 @@ const isFullyBooked = (dateString: string): boolean => {
   const month = date.getMonth(); // 0-indexed
   const day = date.getDate();
   
-  // Only allow 2025 bookings
-  if (year !== 2025) {
+  // Only allow 2025 and 2026 bookings
+  if (year !== 2025 && year !== 2026) {
     return true;
   }
   
@@ -56,6 +56,12 @@ const isFullyBooked = (dateString: string): boolean => {
     if (month === 11 && day === 4) return true;
     if (month === 11 && (day >= 15 && day <= 28)) return true;
     if (month === 11 && day === 31) return true;
+  }
+  
+  // 2026 fully booked dates
+  if (year === 2026) {
+    // January 22nd - 25th
+    if (month === 0 && [22, 23, 24, 25].includes(day)) return true;
   }
   
   return false;
