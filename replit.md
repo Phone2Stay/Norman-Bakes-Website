@@ -128,6 +128,7 @@ Required environment variables:
 - January 23, 2025: Extended blocked dates - entire August, additional September/October/November dates, December 15-28 & 31
 - September 18, 2025: Extended blocked dates - entire September and October months, additional November dates (1st, 2nd, 4th, 8th, 9th, 14th, 20th, 30th), and December 4th
 - October 1, 2025: Enabled January 2026 bookings with blocked dates 22nd-25th
+- October 12, 2025: Opened February-May 2026 for bookings; Updated November 2025 blocking (1st, 2nd, 4th-9th, 11th, 13th, 15th, 16th, 20th-23rd, 28th-30th); Updated December 2025 blocking (1st-7th, 13th-28th, 30th-31st); Updated January 2026 blocking (1st, 2nd, 8th-13th, 18th, 19th, 21st-25th); Added February 2026 blocking (9th-14th, 21st-22nd); Added March 2026 blocking (9th-22nd, 30th-31st); Added April 2026 blocking (1st-6th)
 
 ## User Preferences
 
