@@ -58,8 +58,8 @@ const isFullyBooked = (dateString: string): boolean => {
   
   // 2026 fully booked dates
   if (year === 2026) {
-    // January: 1st, 2nd, 8th-13th, 18th, 19th, 21st-25th
-    if (month === 0 && [1, 2, 8, 9, 10, 11, 12, 13, 18, 19, 21, 22, 23, 24, 25].includes(day)) return true;
+    // January: 1st-5th, 8th-13th, 16th, 18th, 19th, 21st-25th
+    if (month === 0 && [1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13, 16, 18, 19, 21, 22, 23, 24, 25].includes(day)) return true;
     
     // February: 9th-14th, 21st, 22nd
     if (month === 1 && [9, 10, 11, 12, 13, 14, 21, 22].includes(day)) return true;
