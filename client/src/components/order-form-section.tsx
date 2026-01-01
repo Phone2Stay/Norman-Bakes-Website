@@ -58,17 +58,26 @@ const isFullyBooked = (dateString: string): boolean => {
   
   // 2026 fully booked dates
   if (year === 2026) {
-    // January: 1st-5th, 8th-13th, 16th, 18th, 19th, 21st-25th
-    if (month === 0 && [1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13, 16, 18, 19, 21, 22, 23, 24, 25].includes(day)) return true;
+    // January: 1-5, 8-11, 15-17, 21-25, 29-31
+    if (month === 0 && [1, 2, 3, 4, 5, 8, 9, 10, 11, 15, 16, 17, 21, 22, 23, 24, 25, 29, 30, 31].includes(day)) return true;
     
-    // February: 9th-14th, 21st, 22nd
-    if (month === 1 && [9, 10, 11, 12, 13, 14, 21, 22].includes(day)) return true;
+    // February: 8-15, 21-22, 26
+    if (month === 1 && [8, 9, 10, 11, 12, 13, 14, 15, 21, 22, 26].includes(day)) return true;
     
-    // March: 9th-22nd, 30th and 31st
-    if (month === 2 && [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 30, 31].includes(day)) return true;
+    // March: 8-22, 28-31
+    if (month === 2 && [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 28, 29, 30, 31].includes(day)) return true;
     
-    // April: 1st-6th
-    if (month === 3 && [1, 2, 3, 4, 5, 6].includes(day)) return true;
+    // April: 1-5, 27-30
+    if (month === 3 && [1, 2, 3, 4, 5, 27, 28, 29, 30].includes(day)) return true;
+    
+    // May: 6-11
+    if (month === 4 && [6, 7, 8, 9, 10, 11].includes(day)) return true;
+    
+    // June: 2, 14-21
+    if (month === 5 && [2, 14, 15, 16, 17, 18, 19, 20, 21].includes(day)) return true;
+    
+    // July - December: entire months blocked
+    if (month >= 6) return true;
   }
   
   return false;
