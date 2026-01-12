@@ -322,45 +322,50 @@ export default function OrderFormSection() {
     try {
       const total = calculateTotal();
       
-      // For static site deployment, we'll send order via FormSubmit.co
-      // and then proceed directly to payment
-      const formData = new FormData();
-      formData.append('customerName', data.customerName);
-      formData.append('customerEmail', data.customerEmail);
-      formData.append('customerPhone', data.customerPhone);
-      formData.append('collectionDate', data.collectionDate);
-      formData.append('productType', data.productType);
-      formData.append('productDetails', data.productDetails);
-      formData.append('specialRequirements', data.specialRequirements || 'None');
-      formData.append('extras', data.extras || 'None');
-      formData.append('totalAmount', total.toString());
-      formData.append('_subject', `New Cake Order - ${data.productType}`);
-      formData.append('_captcha', 'false');
-      formData.append('_template', 'table');
-      
-      // Send order notification
-      await fetch('https://formsubmit.co/normanbakes38@gmail.com', {
+      // First, create order on server which saves it and sends email notification
+      // This ensures we have a record before payment is processed
+      const orderResponse = await fetch('/api/orders', {
         method: 'POST',
-        body: formData
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customerName: data.customerName,
+          customerEmail: data.customerEmail,
+          customerPhone: data.customerPhone,
+          collectionDate: data.collectionDate,
+          productType: data.productType,
+          productDetails: data.productDetails,
+          specialRequirements: data.specialRequirements || '',
+          extras: data.extras || 'none',
+          totalAmount: total,
+        }),
       });
 
-      // Generate a pseudo order ID for payment tracking
-      const orderId = Date.now();
-      setOrderId(orderId);
+      if (!orderResponse.ok) {
+        const errorData = await orderResponse.json();
+        throw new Error(errorData.message || 'Failed to submit order');
+      }
+
+      const order = await orderResponse.json();
+      
+      // Order saved successfully - now proceed to payment
+      setOrderId(order.id);
       setTotalAmount(total);
       setShowPayment(true);
       
       const isDeposit = selectedProduct?.isDeposit;
       toast({
-        title: "Order Submitted",
+        title: "Order Submitted Successfully",
         description: isDeposit 
-          ? "Please complete your £20 deposit payment. We'll contact you to discuss the full cake details."
-          : `Please complete your £${total} payment.`,
+          ? "Your order has been received. Please complete your £20 deposit payment."
+          : `Your order has been received. Please complete your £${total} payment.`,
       });
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Order submission failed:', error);
       toast({
-        title: "Error",
-        description: "Failed to submit order. Please try again.",
+        title: "Order Submission Failed",
+        description: error.message || "Failed to submit order. Please try again or contact us directly.",
         variant: "destructive",
       });
     }

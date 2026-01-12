@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { pool } from "./db";
 
 const app = express();
 app.use(express.json());
@@ -37,6 +38,28 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Database health check at startup - verify connection and schema
+  try {
+    await pool.query('SELECT 1');
+    log('Database connection verified');
+    
+    // Verify orders table exists
+    const tableCheck = await pool.query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_name = 'orders'
+      )
+    `);
+    if (!tableCheck.rows[0].exists) {
+      throw new Error('Orders table does not exist. Please run npm run db:push');
+    }
+    log('Database schema verified');
+  } catch (dbError) {
+    console.error('CRITICAL: Database check failed:', dbError);
+    console.error('Orders will not be saved. Please check DATABASE_URL and run npm run db:push.');
+    process.exit(1);
+  }
+
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

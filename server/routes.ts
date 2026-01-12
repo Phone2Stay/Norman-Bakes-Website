@@ -149,19 +149,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Create order
+  // Create order - saves order first, then sends email notifications
   app.post("/api/orders", async (req, res) => {
     try {
       const validatedData = insertOrderSchema.parse(req.body);
-      const order = await storage.createOrder(validatedData);
       
-      // Send notification using free console logging approach
-      try {
-        await sendEmailNotification(order);
-      } catch (emailError) {
-        console.error('Email notification failed:', emailError);
+      // First, save the order to storage (this is our backup)
+      const order = await storage.createOrder(validatedData);
+      console.log(`Order #${order.id} saved to storage:`, JSON.stringify(order, null, 2));
+      
+      // Try to send email notification (attempt multiple times if needed)
+      let emailSent = false;
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          emailSent = await sendEmailNotification(order);
+          if (emailSent) {
+            console.log(`Email notification sent successfully on attempt ${attempt}`);
+            break;
+          }
+        } catch (emailError) {
+          console.error(`Email notification attempt ${attempt} failed:`, emailError);
+        }
+      }
+      
+      if (!emailSent) {
+        console.error(`IMPORTANT: Email notification failed for order #${order.id}. Order is saved in storage.`);
+        console.log(`BACKUP - Order Details:
+          Order ID: ${order.id}
+          Customer: ${order.customerName}
+          Email: ${order.customerEmail}
+          Phone: ${order.customerPhone}
+          Product: ${order.productType}
+          Details: ${order.productDetails}
+          Collection Date: ${order.collectionDate}
+          Total: £${order.totalAmount}
+          Special Requirements: ${order.specialRequirements || 'None'}
+          Extras: ${order.extras || 'None'}
+        `);
       }
 
+      // Return order even if email failed - order is saved as backup
       res.json(order);
     } catch (error: any) {
       if (error instanceof z.ZodError) {
@@ -169,6 +196,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else {
         res.status(500).json({ message: "Error creating order: " + error.message });
       }
+    }
+  });
+
+  // Get all orders - protected backup endpoint (requires admin key)
+  app.get("/api/orders", async (req, res) => {
+    try {
+      // Require ADMIN_KEY to be configured - no fallback for security
+      const expectedKey = process.env.ADMIN_KEY;
+      if (!expectedKey) {
+        console.error("ADMIN_KEY environment variable is not configured");
+        return res.status(503).json({ message: "Backup endpoint not configured" });
+      }
+      
+      const adminKey = req.headers['x-admin-key'] || req.query.key;
+      if (adminKey !== expectedKey) {
+        return res.status(401).json({ message: "Unauthorized access" });
+      }
+      
+      const allOrders = await storage.getAllOrders();
+      res.json(allOrders);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching orders: " + error.message });
     }
   });
 

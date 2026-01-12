@@ -36,21 +36,5 @@ waitForPort = 5000
 localPort = 5000
 externalPort = 80
 
-[[ports]]
-localPort = 40809
-externalPort = 3002
-
-[[ports]]
-localPort = 40997
-externalPort = 3001
-
-[[ports]]
-localPort = 41881
-externalPort = 3000
-
-[[ports]]
-localPort = 42879
-externalPort = 3003
-
 [agent]
 integrations = ["javascript_stripe:1.0.0"]

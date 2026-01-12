@@ -1,4 +1,6 @@
 import { users, orders, seasonalDeals, type User, type InsertUser, type Order, type InsertOrder, type SeasonalDeal, type InsertSeasonalDeal } from "@shared/schema";
+import { db } from "./db";
+import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -7,6 +9,7 @@ export interface IStorage {
   
   createOrder(order: InsertOrder): Promise<Order>;
   getOrder(id: number): Promise<Order | undefined>;
+  getAllOrders(): Promise<Order[]>;
   updateOrderPaymentStatus(id: number, stripePaymentIntentId: string): Promise<Order | undefined>;
   getOrderCountForDate(date: string): Promise<number>;
   
@@ -14,96 +17,58 @@ export interface IStorage {
   createSeasonalDeal(deal: InsertSeasonalDeal): Promise<SeasonalDeal>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private orders: Map<number, Order>;
-  private seasonalDeals: Map<number, SeasonalDeal>;
-  private currentUserId: number;
-  private currentOrderId: number;
-  private currentDealId: number;
-
-  constructor() {
-    this.users = new Map();
-    this.orders = new Map();
-    this.seasonalDeals = new Map();
-    this.currentUserId = 1;
-    this.currentOrderId = 1;
-    this.currentDealId = 1;
-  }
-
+export class DatabaseStorage implements IStorage {
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
+    const [user] = await db.insert(users).values(insertUser).returning();
     return user;
   }
 
   async createOrder(insertOrder: InsertOrder): Promise<Order> {
-    const id = this.currentOrderId++;
-    const order: Order = { 
-      id,
-      customerName: insertOrder.customerName,
-      customerEmail: insertOrder.customerEmail,
-      customerPhone: insertOrder.customerPhone,
-      collectionDate: insertOrder.collectionDate,
-      productType: insertOrder.productType,
-      productDetails: insertOrder.productDetails,
-      specialRequirements: insertOrder.specialRequirements || null,
-      extras: insertOrder.extras || null,
-      totalAmount: insertOrder.totalAmount,
-      stripePaymentIntentId: null,
-      paymentStatus: "pending",
-      createdAt: new Date()
-    };
-    this.orders.set(id, order);
+    const [order] = await db.insert(orders).values(insertOrder).returning();
     return order;
   }
 
   async getOrder(id: number): Promise<Order | undefined> {
-    return this.orders.get(id);
+    const [order] = await db.select().from(orders).where(eq(orders.id, id));
+    return order;
+  }
+
+  async getAllOrders(): Promise<Order[]> {
+    return db.select().from(orders).orderBy(desc(orders.createdAt));
   }
 
   async updateOrderPaymentStatus(id: number, stripePaymentIntentId: string): Promise<Order | undefined> {
-    const order = this.orders.get(id);
-    if (order) {
-      const updatedOrder = { ...order, paymentStatus: "paid", stripePaymentIntentId };
-      this.orders.set(id, updatedOrder);
-      return updatedOrder;
-    }
-    return undefined;
+    const [updatedOrder] = await db
+      .update(orders)
+      .set({ paymentStatus: "paid", stripePaymentIntentId })
+      .where(eq(orders.id, id))
+      .returning();
+    return updatedOrder;
   }
 
   async getOrderCountForDate(date: string): Promise<number> {
-    return Array.from(this.orders.values()).filter(order => order.collectionDate === date).length;
+    const ordersOnDate = await db.select().from(orders).where(eq(orders.collectionDate, date));
+    return ordersOnDate.length;
   }
 
   async getActiveSeasonalDeals(): Promise<SeasonalDeal[]> {
-    return Array.from(this.seasonalDeals.values()).filter(deal => deal.isActive === 1);
+    return db.select().from(seasonalDeals).where(eq(seasonalDeals.isActive, 1));
   }
 
   async createSeasonalDeal(insertDeal: InsertSeasonalDeal): Promise<SeasonalDeal> {
-    const id = this.currentDealId++;
-    const deal: SeasonalDeal = { 
-      ...insertDeal, 
-      id,
-      discount: insertDeal.discount || null,
-      validUntil: insertDeal.validUntil || null,
-      isActive: insertDeal.isActive || 1,
-      createdAt: new Date()
-    };
-    this.seasonalDeals.set(id, deal);
+    const [deal] = await db.insert(seasonalDeals).values(insertDeal).returning();
     return deal;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
