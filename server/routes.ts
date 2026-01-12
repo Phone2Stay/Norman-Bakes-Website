@@ -242,12 +242,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(amount * 100), // Convert to pence
         currency: "gbp",
+        receipt_email: order.customerEmail,
         metadata: {
           orderId: orderId.toString(),
           customerEmail: order.customerEmail,
-          customerName: order.customerName
+          customerName: order.customerName,
+          customerPhone: order.customerPhone,
+          productType: order.productType,
+          productDetails: order.productDetails,
+          collectionDate: order.collectionDate
         },
-        description: `Deposit for ${order.productType} - Order #${orderId}`
+        description: `Deposit for ${order.productType} - Order #${orderId}`,
+        shipping: {
+          name: order.customerName,
+          phone: order.customerPhone,
+          address: {
+            line1: "Collection order",
+            city: "Barry",
+            country: "GB"
+          }
+        }
       });
 
       res.json({ clientSecret: paymentIntent.client_secret });
