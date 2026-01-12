@@ -18,15 +18,16 @@ The frontend is built using **React 18** with **TypeScript** and styled using **
 The backend is an **Express.js** server with TypeScript that provides:
 - RESTful API endpoints for orders and seasonal deals
 - **Stripe** integration for payment processing
-- **Nodemailer** for email notifications
+- **FormSubmit.co** for email notifications (with 3-attempt retry logic)
 - Session management with **connect-pg-simple**
-- In-memory storage implementation (ready for database integration)
+- **PostgreSQL database** for permanent order storage
 
 ### Data Storage Strategy
-Currently implements an **in-memory storage** pattern with a clean interface (`IStorage`) that can be easily swapped for a database implementation. The system is prepared for **PostgreSQL** integration using:
-- **Drizzle ORM** for database operations
-- **Neon Database** serverless PostgreSQL (based on dependencies)
-- Migration support through drizzle-kit
+Uses **PostgreSQL** with **Drizzle ORM** for all data persistence:
+- **Database-first order flow**: Orders are saved to database BEFORE payment to prevent data loss
+- **Neon Database**: Serverless PostgreSQL
+- **Database health checks**: Server verifies database connection and schema at startup
+- **Backup mechanisms**: Console logging of order details + protected /api/orders endpoint
 
 ## Key Components
 
@@ -132,6 +133,7 @@ Required environment variables:
 - November 11, 2025: Blocked entire November and December 2025 - all dates now unavailable
 - November 12, 2025: Updated January 2026 blocking to match calendar (1st-5th, 8th-13th, 16th, 18th-19th, 21st-25th)
 - January 1, 2026: Comprehensive 2026 calendar update - blocked July-December entirely; Updated Jan-June with specific dates from calendar images
+- January 12, 2026: Critical reliability fix - orders now saved to PostgreSQL database BEFORE payment to prevent data loss; Added email retry logic (3 attempts); Added console logging backup; Added protected /api/orders endpoint (requires ADMIN_KEY); Added database health checks at startup
 
 ## User Preferences
 
