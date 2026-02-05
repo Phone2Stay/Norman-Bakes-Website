@@ -85,7 +85,7 @@ const isFullyBooked = (dateString: string): boolean => {
 
 const orderSchema = z.object({
   customerName: z.string().min(1, "Name is required"),
-  customerEmail: z.string().email("Valid email is required"),
+  customerEmail: z.string().min(1, "Email is required"),
   customerPhone: z.string().min(1, "Phone number is required"),
   collectionDate: z.string().min(1, "Collection date is required").refine(
     (date) => !isFullyBooked(date),
@@ -329,6 +329,10 @@ export default function OrderFormSection() {
       if (!data.customerEmail?.trim()) {
         throw new Error('Please enter your email address');
       }
+      // Simple email check - just needs @ symbol
+      if (!data.customerEmail.includes('@')) {
+        throw new Error('Please enter a valid email address (must contain @)');
+      }
       if (!data.customerPhone?.trim()) {
         throw new Error('Please enter your phone number');
       }
@@ -549,15 +553,24 @@ export default function OrderFormSection() {
           <CardContent>
             <Form {...form}>
               <form 
-                onSubmit={(e) => { 
+                onSubmit={async (e) => { 
                   e.preventDefault(); 
                   e.stopPropagation();
-                  form.handleSubmit(onSubmit)(e); 
+                  try {
+                    await form.handleSubmit(onSubmit)(e);
+                  } catch (error: any) {
+                    console.error('Form handleSubmit error:', error);
+                    // Catch any errors from form.handleSubmit itself
+                    toast({
+                      title: "Order Submission Failed",
+                      description: "Please check all fields are filled in correctly. If the problem persists, please contact us directly at normanbakes38@gmail.com",
+                      variant: "destructive",
+                    });
+                  }
                 }} 
                 className="space-y-6" 
                 noValidate 
                 autoComplete="off"
-                action="javascript:void(0);"
               >
                 <div className="grid md:grid-cols-2 gap-4">
                   <FormField
@@ -760,16 +773,19 @@ export default function OrderFormSection() {
                 <FormField
                   control={form.control}
                   name="referenceImage"
-                  render={({ field }) => (
+                  render={({ field: { onChange, value, ...field } }) => (
                     <FormItem>
                       <FormLabel>Reference Image (Optional)</FormLabel>
                       <FormControl>
                         <Input
+                          {...field}
                           type="file"
                           accept="image/*"
                           onChange={(e) => {
                             const file = e.target.files?.[0];
-                            field.onChange(file);
+                            if (file) {
+                              onChange(file);
+                            }
                           }}
                           className="cursor-pointer"
                         />
