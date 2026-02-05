@@ -322,6 +322,26 @@ export default function OrderFormSection() {
     try {
       const total = calculateTotal();
       
+      // Validate required fields before submission
+      if (!data.customerName?.trim()) {
+        throw new Error('Please enter your name');
+      }
+      if (!data.customerEmail?.trim()) {
+        throw new Error('Please enter your email address');
+      }
+      if (!data.customerPhone?.trim()) {
+        throw new Error('Please enter your phone number');
+      }
+      if (!data.collectionDate) {
+        throw new Error('Please select a collection date');
+      }
+      if (!data.productType) {
+        throw new Error('Please select a product type');
+      }
+      if (!data.productDetails?.trim()) {
+        throw new Error('Please enter product details');
+      }
+      
       // First, create order on server which saves it and sends email notification
       // This ensures we have a record before payment is processed
       const orderResponse = await fetch('/api/orders', {
@@ -330,13 +350,13 @@ export default function OrderFormSection() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          customerName: data.customerName,
-          customerEmail: data.customerEmail,
-          customerPhone: data.customerPhone,
+          customerName: data.customerName.trim(),
+          customerEmail: data.customerEmail.trim(),
+          customerPhone: data.customerPhone.trim(),
           collectionDate: data.collectionDate,
           productType: data.productType,
-          productDetails: data.productDetails,
-          specialRequirements: data.specialRequirements || '',
+          productDetails: data.productDetails.trim(),
+          specialRequirements: data.specialRequirements?.trim() || '',
           extras: data.extras || 'none',
           totalAmount: total,
         }),
@@ -363,9 +383,17 @@ export default function OrderFormSection() {
       });
     } catch (error: any) {
       console.error('Order submission failed:', error);
+      // Provide user-friendly error messages
+      let errorMessage = error.message || "Failed to submit order. Please try again or contact us directly.";
+      
+      // Replace browser validation errors with helpful messages
+      if (errorMessage.includes('pattern') || errorMessage.includes('expected')) {
+        errorMessage = "Please check all fields are filled in correctly. If the problem persists, please contact us directly at normanbakes38@gmail.com";
+      }
+      
       toast({
         title: "Order Submission Failed",
-        description: error.message || "Failed to submit order. Please try again or contact us directly.",
+        description: errorMessage,
         variant: "destructive",
       });
     }
@@ -520,7 +548,17 @@ export default function OrderFormSection() {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={(e) => { e.preventDefault(); form.handleSubmit(onSubmit)(e); }} className="space-y-6" noValidate autoComplete="off">
+              <form 
+                onSubmit={(e) => { 
+                  e.preventDefault(); 
+                  e.stopPropagation();
+                  form.handleSubmit(onSubmit)(e); 
+                }} 
+                className="space-y-6" 
+                noValidate 
+                autoComplete="off"
+                action="javascript:void(0);"
+              >
                 <div className="grid md:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
