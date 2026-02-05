@@ -556,17 +556,9 @@ export default function OrderFormSection() {
                 onSubmit={async (e) => { 
                   e.preventDefault(); 
                   e.stopPropagation();
-                  try {
-                    await form.handleSubmit(onSubmit)(e);
-                  } catch (error: any) {
-                    console.error('Form handleSubmit error:', error);
-                    // Catch any errors from form.handleSubmit itself
-                    toast({
-                      title: "Order Submission Failed",
-                      description: "Please check all fields are filled in correctly. If the problem persists, please contact us directly at normanbakes38@gmail.com",
-                      variant: "destructive",
-                    });
-                  }
+                  // Bypass React Hook Form validation - get values directly
+                  const values = form.getValues();
+                  await onSubmit(values);
                 }} 
                 className="space-y-6" 
                 noValidate 
