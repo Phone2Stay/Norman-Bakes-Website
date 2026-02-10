@@ -1,6 +1,49 @@
-const nodemailer = require('nodemailer');
-
 let orderCounter = Date.now();
+
+async function sendEmailNotification(order) {
+  const emailBody = `NEW CAKE ORDER RECEIVED
+
+Order ID: ${order.id}
+Date Placed: ${new Date(order.createdAt).toLocaleDateString('en-GB')}
+
+Customer Information:
+- Name: ${order.customerName}
+- Email: ${order.customerEmail}
+- Phone: ${order.customerPhone}
+
+Product Details:
+- Product Type: ${order.productType}
+- Description: ${order.productDetails}
+- Collection Date: ${order.collectionDate}
+- Special Requirements: ${order.specialRequirements || 'None'}
+- Extras: ${order.extras && order.extras !== 'none' ? order.extras : 'None'}
+
+Payment Information:
+- Total Amount: £${order.totalAmount}
+- Payment Status: ${order.paymentStatus}`;
+
+  const formBody = new URLSearchParams();
+  formBody.append('name', order.customerName);
+  formBody.append('email', order.customerEmail);
+  formBody.append('phone', order.customerPhone);
+  formBody.append('message', emailBody);
+  formBody.append('_subject', `New Cake Order #${order.id} - ${order.productType}`);
+  formBody.append('_captcha', 'false');
+  formBody.append('_template', 'table');
+
+  const response = await fetch('https://formsubmit.co/ajax/normanbakes38@gmail.com', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json',
+    },
+    body: formBody.toString(),
+  });
+
+  const result = await response.json();
+  console.log('FormSubmit response:', JSON.stringify(result));
+  return response.ok && result.success !== 'false';
+}
 
 exports.handler = async (event, context) => {
   const headers = {
@@ -67,44 +110,21 @@ exports.handler = async (event, context) => {
 
     console.log('Order created:', JSON.stringify(order, null, 2));
 
-    try {
-      const transporter = nodemailer.createTransport({
-        host: 'smtp.formsubmit.co',
-        port: 587,
-        secure: false,
-        auth: {
-          user: 'normanbakes38@gmail.com',
-          pass: process.env.FORMSUBMIT_TOKEN || '',
-        },
-      });
+    let emailSent = false;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        emailSent = await sendEmailNotification(order);
+        if (emailSent) {
+          console.log(`Email sent successfully on attempt ${attempt}`);
+          break;
+        }
+      } catch (emailError) {
+        console.error(`Email attempt ${attempt} failed:`, emailError.message);
+      }
+    }
 
-      const emailContent = `
-New Order Received!
-
-Order ID: ${orderId}
-Customer: ${customerName}
-Email: ${customerEmail}
-Phone: ${customerPhone}
-Collection Date: ${collectionDate}
-Product: ${productType}
-Details: ${productDetails}
-Special Requirements: ${specialRequirements || 'None'}
-Extras: ${extras || 'None'}
-Total Amount: £${totalAmount}
-
-Order placed at: ${order.createdAt}
-      `.trim();
-
-      await transporter.sendMail({
-        from: 'normanbakes38@gmail.com',
-        to: 'normanbakes38@gmail.com',
-        subject: `New Order #${orderId} from ${customerName}`,
-        text: emailContent,
-      });
-
-      console.log('Email notification sent');
-    } catch (emailError) {
-      console.error('Email notification failed:', emailError);
+    if (!emailSent) {
+      console.error(`EMAIL FAILED for order #${orderId} - Order details logged above`);
     }
 
     return {

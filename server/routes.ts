@@ -1,7 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import Stripe from "stripe";
-import nodemailer from "nodemailer";
 import { storage } from "./storage";
 import { insertOrderSchema } from "@shared/schema";
 import { z } from "zod";
@@ -12,22 +11,12 @@ if (process.env.STRIPE_SECRET_KEY) {
   stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 }
 
-// Direct email notifications using formsubmit.co (same as LB Interface approach)
 async function sendEmailNotification(orderData: any) {
   try {
-    const formData = new FormData();
-    formData.append('name', orderData.customerName);
-    formData.append('email', orderData.customerEmail);
-    formData.append('phone', orderData.customerPhone);
-    formData.append('_subject', `New Cake Order - ${orderData.productType}`);
-    formData.append('_captcha', 'false');
-    formData.append('_template', 'table');
-    formData.append('message', `
-NEW CAKE ORDER RECEIVED
+    const emailBody = `NEW CAKE ORDER RECEIVED
 
-Order Details:
-- Order ID: ${orderData.id}
-- Date: ${new Date(orderData.createdAt).toLocaleDateString('en-GB')}
+Order ID: ${orderData.id}
+Date Placed: ${new Date(orderData.createdAt).toLocaleDateString('en-GB')}
 
 Customer Information:
 - Name: ${orderData.customerName}
@@ -43,21 +32,34 @@ Product Details:
 
 Payment Information:
 - Total Amount: £${orderData.totalAmount}
-- Payment Status: ${orderData.paymentStatus}
+- Payment Status: ${orderData.paymentStatus}`;
 
-Contact the customer to discuss final details and arrange payment.
-    `);
+    const formBody = new URLSearchParams();
+    formBody.append('name', orderData.customerName);
+    formBody.append('email', orderData.customerEmail);
+    formBody.append('phone', orderData.customerPhone);
+    formBody.append('message', emailBody);
+    formBody.append('_subject', `New Cake Order #${orderData.id} - ${orderData.productType}`);
+    formBody.append('_captcha', 'false');
+    formBody.append('_template', 'table');
 
-    const response = await fetch('https://formsubmit.co/normanbakes38@gmail.com', {
+    const response = await fetch('https://formsubmit.co/ajax/normanbakes38@gmail.com', {
       method: 'POST',
-      body: formData
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
+      },
+      body: formBody.toString(),
     });
+
+    const result = await response.json();
+    console.log('FormSubmit response:', JSON.stringify(result));
 
     if (response.ok) {
       console.log('Order notification sent to normanbakes38@gmail.com');
       return true;
     } else {
-      console.error('Failed to send order notification');
+      console.error('Failed to send order notification:', result);
       return false;
     }
   } catch (error) {
@@ -68,15 +70,7 @@ Contact the customer to discuss final details and arrange payment.
 
 async function sendPaymentConfirmation(orderData: any, paymentIntentId: string) {
   try {
-    const formData = new FormData();
-    formData.append('name', orderData.customerName);
-    formData.append('email', orderData.customerEmail);
-    formData.append('phone', orderData.customerPhone);
-    formData.append('_subject', `PAYMENT RECEIVED - Order #${orderData.id}`);
-    formData.append('_captcha', 'false');
-    formData.append('_template', 'table');
-    formData.append('message', `
-PAYMENT RECEIVED - DEPOSIT CONFIRMED
+    const emailBody = `PAYMENT RECEIVED - DEPOSIT CONFIRMED
 
 Order Information:
 - Order ID: ${orderData.id}
@@ -93,25 +87,34 @@ Product Details:
 - Product Type: ${orderData.productType}
 - Collection Date: ${orderData.collectionDate}
 
-STATUS: READY TO START BAKING!
+STATUS: READY TO START BAKING!`;
 
-Next Steps:
-- Contact customer to confirm final details
-- Discuss any customisation requirements
-- Arrange collection/delivery logistics
-- Calculate and collect remaining balance
-    `);
+    const formBody = new URLSearchParams();
+    formBody.append('name', orderData.customerName);
+    formBody.append('email', orderData.customerEmail);
+    formBody.append('phone', orderData.customerPhone);
+    formBody.append('message', emailBody);
+    formBody.append('_subject', `PAYMENT RECEIVED - Order #${orderData.id}`);
+    formBody.append('_captcha', 'false');
+    formBody.append('_template', 'table');
 
-    const response = await fetch('https://formsubmit.co/normanbakes38@gmail.com', {
+    const response = await fetch('https://formsubmit.co/ajax/normanbakes38@gmail.com', {
       method: 'POST',
-      body: formData
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
+      },
+      body: formBody.toString(),
     });
+
+    const result = await response.json();
+    console.log('Payment confirmation response:', JSON.stringify(result));
 
     if (response.ok) {
       console.log('Payment confirmation sent to normanbakes38@gmail.com');
       return true;
     } else {
-      console.error('Failed to send payment confirmation');
+      console.error('Failed to send payment confirmation:', result);
       return false;
     }
   } catch (error) {
